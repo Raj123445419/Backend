@@ -27,7 +27,7 @@ urlpatterns = [
     path('Employ_attendance/', views.Employ_attendance, name='Employ_attendance'),
     path('Delete_attendance/<int:id>/', views.Delete_attendance, name='Delete_attendance'),
     path('Edite_attendance/<int:id>/', views.Edite_attendance, name='Edite_attendance'),
-    path('Employ_sallery/', views.Employ_sallery, name='Employ_sallery'),
+    path('Employ_Sallery/', views.Employ_Sallery, name='Employ_Sallery'),
 
 
 

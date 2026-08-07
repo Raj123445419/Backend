@@ -136,7 +136,7 @@ def Delete_attendance(request, id):
 
 
 
-def Employ_sallery(request):
+def Employ_Sallery(request):
 
     employees = Employ_Data.objects.all()
     salary_data = []
@@ -180,7 +180,7 @@ def Employ_sallery(request):
             "TotalSalary": round(total_salary, 2),
         })
 
-    return render(request, "Employ_sallery.html", {
+    return render(request, "Employ_Sallery.html", {
         "salary_data": salary_data
     })
 

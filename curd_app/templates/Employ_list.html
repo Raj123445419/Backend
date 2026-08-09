@@ -152,6 +152,118 @@ margin-top: 10px;
 }
 
 
+.employee-table-box { 
+  width: 100%;
+   max-width: 100%; 
+   overflow: hidden;
+   }
+
+
+ .employee-table { 
+  width: 100%; 
+  table-layout: fixed;
+   margin-bottom: 0;
+   }
+
+
+
+  .employee-table th, .employee-table td {
+     max-width: 180px;
+      overflow: hidden;
+     } 
+
+
+
+   .cell-scroll { 
+    width: 100%; 
+    max-width: 180px; 
+    overflow-x: auto;
+     overflow-y: hidden;
+      white-space: nowrap;
+       scrollbar-width: thin;
+       } 
+
+
+
+   .cell-scroll::-webkit-scrollbar {
+     height: 5px;
+     } 
+     .cell-scroll::-webkit-scrollbar-thumb {
+       border-radius: 10px;
+       } 
+
+
+
+   .employee-table td:last-child, .employee-table td:nth-last-child(2) { 
+    width: 80px;
+     max-width: 80px; 
+    }
+
+
+
+     @media (max-width: 768px) { 
+      .employee-table { 
+        font-size: 13px; 
+      } 
+      .employee-table th, .employee-table td {
+         padding: 8px 6px;
+         } 
+      .cell-scroll {
+         max-width: 100px;
+         } 
+         .employee-table td:last-child, .employee-table td:nth-last-child(2){ 
+          width: 65px; 
+          max-width: 65px;
+         } 
+         .btn-sm { 
+          font-size: 11px; 
+          padding: 4px 7px;
+         } 
+        
+        }
+
+
+
+ @media (max-width: 480px) {
+  .employee-table {
+     font-size: 12px; 
+    } 
+        .employee-table th, .employee-table td { 
+          padding: 6px 4px;
+         } 
+         .cell-scroll { 
+          max-width: 75px;
+         } 
+        .employee-table td:last-child, .employee-table td:nth-last-child(2) { 
+          width: 58px; 
+          max-width: 58px; 
+        }
+         .btn-sm { 
+          font-size: 10px;
+           padding: 3px 5px;
+           } 
+          
+          }
+
+
+
+
+/* agar scorrl ke baja ye text size hi small kar nni ho to */
+
+/* .cell-scroll {
+    white-space: nowrap;
+    overflow: hidden;
+}  */
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -230,56 +342,64 @@ Employ Details
 </center>
 </div>    
 
-<div class="col-md-12 mt-4">
+<div class="employee-table-box">
+<table class="table table-bordered table-hover align-middle employee-table"> 
+    <thead class="table-dark text-center alltext"> 
 
-    <div class="table-responsive">
+      <tr>
 
-        <table class="table table-bordered table-hover align-middle">
+         <th>Employ Id</th>
+          <th>Employ Name</th> 
+        <th>Address</th>
+         <th>Employ Role</th>
+         <th>Designation</th> 
+         <th>Experience</th>
+          <th>Salary</th> 
+          <th colspan="2">Manage</th>
+         </tr> 
+        
+        
+        </thead>
+         <tbody>
+           {% for i in data %}
+            <tr>
+           <td>{{ i.EmployId }}</td>
+            <td>
+               <div class="cell-scroll"> {{ i.Employname }} </div>
+            </td>
+             <td>
+               <div class="cell-scroll"> {{ i.Address }} </div> 
+            </td> 
+            <td> 
+              <div class="cell-scroll"> {{ i.Employrole }} </div> 
+            </td> 
+            <td> <div class="cell-scroll"> {{ i.Designation }} </div>
+             </td>
+              <td> <div class="cell-scroll"> {{ i.Experince }} </div> 
+            </td> 
+            <td> <div class="cell-scroll"> {{ i.Salary }} </div>
+             </td>
+             <td class="text-center"> 
+              <a href="{% url 'Edite' i.EmployId %}" class="btn btn-edit btn-sm"> Edit </a> 
+            </td> 
+             <td class="text-center"> 
+              <a href="{% url 'Delete' i.EmployId %}" class="btn btn-delete btn-sm"> Delete </a>
+             </td>
+             </tr>
+             
+             {% endfor %} 
+            
+            
+            
+            
+            </tbody> 
+           </table> 
+          </div>
 
-            <thead class="table-dark text-center alltext">
-                <tr>
-                    <th>Employ Id</th>
-                    <th>Employ Name</th>
-                    <th>Address</th>
-                    <th>Employ Role</th>
-                    <th>Designation</th>
-                    <th>Experience</th>
-                    <th>Salary</th>
-                    <th colspan="2">Manage</th>
-                </tr>
-            </thead>
 
-            <tbody>
-                {% for i in data %}
-                <tr>
-                    <td>{{ i.EmployId }}</td>
-                    <td>{{ i.Employname }}</td>
-                    <td>{{ i.Address }}</td>
-                    <td>{{ i.Employrole }}</td>
-                    <td>{{ i.Designation }}</td>
-                    <td>{{ i.Experince }}</td>
-                    <td>{{ i.Salary }}</td>
 
-                    <td class="text-center">
-                        <a href="{% url 'Edite' i.EmployId %}" class="btn btn-edit btn-sm">
-                            Edit
-                        </a>
-                    </td>
 
-                    <td class="text-center">
-                        <a href="{% url 'Delete' i.EmployId %}" class="btn btn-delete btn-sm">
-                            Delete
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
 
-        </table>
-
-    </div>
-
-</div>
 
 <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg modal-fullscreen-sm-down">
@@ -385,4 +505,29 @@ Employ Details
 
 
 </body>
+
+
+<!-- <script>
+function resizeText() {
+
+    document.querySelectorAll('.cell-scroll').forEach(function(text) {
+
+        let size = 14;
+
+        text.style.fontSize = size + "px";
+
+        while (text.scrollWidth > text.clientWidth && size > 4) {
+            size--;
+            text.style.fontSize = size + "px";
+        }
+
+    });
+
+}
+
+window.addEventListener("load", resizeText);
+window.addEventListener("resize", resizeText);
+</script> -->
+
+
 </html>

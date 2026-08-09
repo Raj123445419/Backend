@@ -158,6 +158,96 @@ color: white;
         }
 
 
+
+
+
+.attendance-table-box { 
+  width: 100%
+  ; max-width: 100%;
+   overflow: hidden;
+   }
+
+
+
+ .attendance-table {
+   width: 100%;
+    max-width: 100%;
+     table-layout: fixed;
+      margin-bottom: 0;
+     } 
+
+
+
+  .attendance-table th, .attendance-table td { 
+    overflow: hidden;
+     max-width: 180px;
+     } 
+  
+
+
+ .cell-scroll { 
+  width: 100%;
+   max-width: 180px;
+    overflow-x: auto;
+     overflow-y: hidden;
+      white-space: nowrap;
+       scrollbar-width: thin;
+       } 
+
+
+
+  .cell-scroll::-webkit-scrollbar {
+    height: 5px; 
+   } 
+   .cell-scroll::-webkit-scrollbar-thumb {
+      border-radius: 10px; 
+     } 
+
+
+
+
+     .manage-btn {
+        width: 75px;
+         max-width: 75px; 
+       } 
+
+
+
+        @media (max-width: 768px) {
+             .attendance-table { font-size: 13px; }
+     .attendance-table th, .attendance-table td { padding: 8px 6px; } 
+     .cell-scroll { max-width: 100px; } 
+     .manage-btn { width: 65px; max-width: 65px; } 
+     .btn-sm { font-size: 11px; padding: 4px 7px; } 
+   } 
+
+
+
+
+    @media (max-width: 480px) { 
+     .attendance-table { font-size: 12px; } 
+     .attendance-table th, .attendance-table td { padding: 6px 4px; } 
+           .cell-scroll { max-width: 75px; } 
+           .manage-btn { width: 58px; max-width: 58px; } 
+           .btn-sm { font-size: 10px; padding: 3px 5px; }
+            }
+
+
+
+
+
+/* agar scorrl ke baja ye text size hi small kar nni ho to */
+/* 
+.cell-scroll {
+    white-space: nowrap;
+    overflow: hidden;
+} */
+
+
+
+
+
+
 </style>
 
 </head>
@@ -293,52 +383,42 @@ color: white;
     </div>
 
     <div class="card-body">
+       <div class="attendance-table-box"> 
+        <table class="table table-bordered table-striped attendance-table">
+           <tr class="table-dark"> 
+            <th>ID</th> 
+            <th>Employee Name</th> 
+            <th>Date</th> 
+            <th>Status</th>
+             <th>Edit</th>
+              <th>Delete</th> 
+            </tr>
 
-        <div class="table-responsive">
 
-            <table class="table table-bordered table-striped">
+             {% for i in attendance %} 
 
-                <tr class="table-dark">
-                    <th>ID</th>
-                    <th>Employee Name</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                </tr>
 
-                {% for i in attendance %}
+             <tr> 
+              <td>{{ i.EmployId }}</td>
+               <td> <div class="cell-scroll"> {{ i.Employname }} </div> </td>
+                <td> <div class="cell-scroll"> {{ i.Date }} </div> </td>
+                 <td> <div class="cell-scroll"> {{ i.Status }} </div> </td>
+                  <td class="text-center manage-btn">
+                     <a href="{% url 'Edite_attendance' i.id %}" class="btn btn-edit btn-sm cl2"> Edit </a>
+                     </td> 
+                     <td class="text-center manage-btn">
+                       <a href="{% url 'Delete_attendance' i.id %}" class="btn btn-delete btn-sm cl3"> Delete </a>
+                       </td>
+                       </tr>
 
-                <tr>
 
-                    <td>{{ i.EmployId }}</td>
-                    <td>{{ i.Employname }}</td>
-                    <td>{{ i.Date }}</td>
-                    <td>{{ i.Status }}</td>
+                        {% endfor %} 
 
-                    <td>
-                        <a href="{% url 'Edite_attendance' i.id %}" class="btn btn-edit btn-sm cl2">
-                            Edit
-                        </a>
-                    </td>
 
-                    <td>
-                        <a href="{% url 'Delete_attendance' i.id %}" class="btn btn-delete btn-sm cl3">
-                            Delete
-                        </a>
-                    </td>
 
-                </tr>
-
-                {% endfor %}
-
-            </table>
-
-        </div>
-
-    </div>
-
-</div>
+                      </table> 
+                    </div> 
+                  </div>
 
 </main>
 
@@ -358,6 +438,38 @@ color: white;
 
 
 </body>
+
+
+
+<!-- agar scorrl ke baja ye text size hi small kar nni ho to -->
+<!-- <script>
+function resizeText() {
+
+    document.querySelectorAll('.cell-scroll').forEach(function (text) {
+
+        let size = 14;
+
+        text.style.fontSize = size + "px";
+
+        while (text.scrollWidth > text.clientWidth && size > 4) {
+            size--;
+            text.style.fontSize = size + "px";
+        }
+
+    });
+
+}
+
+window.addEventListener("load", resizeText);
+window.addEventListener("resize", resizeText);
+</script> -->
+
+
+
+
+
+
+
 </html> 
 
 

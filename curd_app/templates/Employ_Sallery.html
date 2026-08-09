@@ -73,6 +73,85 @@ color: white;
   font-style: normal;
 }
 
+
+
+
+
+
+
+
+.salary-table { 
+  width: 100%;
+   max-width: 100%;
+    table-layout: fixed;
+   } 
+   .salary-table th, .salary-table td { 
+    max-width: 180px;
+     overflow: hidden;
+     } 
+
+
+     
+ .cell-scroll { 
+  width: 100%;
+   max-width: 180px; 
+   overflow-x: auto;
+    overflow-y: hidden;
+     white-space: nowrap;
+      scrollbar-width: thin;
+     } 
+
+
+     @media (max-width: 768px) { 
+      .salary-table { font-size: 13px; } 
+      .salary-table th, .salary-table td { padding: 8px 6px; } 
+      .cell-scroll { max-width: 100px; } 
+    }
+   
+  
+
+        @media (max-width: 480px) {
+           .salary-table { font-size: 12px; } 
+           .salary-table th, .salary-table td { padding: 6px 4px; } 
+           .cell-scroll { max-width: 75px; }
+           }
+
+
+
+
+
+
+
+
+
+
+
+/* agar scorrl ke baja ye text size hi small kar nni ho to */
+
+/* .cell-scroll {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: clamp(4px, 1vw, 14px);
+} 
+
+@media (max-width: 768px) {
+    .cell-wrap {
+        max-width: 100px;
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 480px) {
+    .cell-wrap {
+        max-width: 75px;
+        font-size: 9px;
+    }
+}
+
+*/
+
+
 </style>
 
     
@@ -116,44 +195,43 @@ color: white;
 </div>
 
 
+<div class="w-100 overflow-hidden"> 
+  <table class="table table-bordered table-striped alltext salary-table"> 
+    <thead class="table-dark"> 
+<tr> 
+  <th>Employee ID</th>
+   <th>Employee Name</th>
+    <th>Monthly Salary</th>
+     <th>Present</th>
+      <th>Half Day</th>
+       <th>Absent</th>
+        <th>Total Salary</th>
+       </tr> 
+      </thead>
+       <tbody> 
+        {% for p in salary_data %}
+         <tr> 
+          <td>{{ p.EmployId }}</td>
+           <td>
+             <div class="cell-scroll"> {{ p.Employname }} </div> 
+            </td>
+            <td> 
+              <div class="cell-scroll"> ₹ {{ p.Salary }} </div>
+             </td> 
+             <td>{{ p.Present }}</td> 
+             <td>{{ p.HalfDay }}</td>
+              <td>{{ p.Absent }}</td>
+               <td> 
+                <div class="cell-scroll"> 
+                  <b>₹ {{ p.TotalSalary }}</b>
+                 </div>
+                 </td> 
+                </tr> 
 
-
-<div class="table-responsive mt-4">
-
-    <table class="table table-bordered table-striped alltext">
-
-        <thead class="table-dark">
-            <tr>
-                <th>Employee ID</th>
-                <th>Employee Name</th>
-                <th>Monthly Salary</th>
-                <th>Present</th>
-                <th>Half Day</th>
-                <th>Absent</th>
-                <th>Total Salary</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            {% for p in salary_data %}
-            <tr>
-                <td>{{ p.EmployId }}</td>
-                <td>{{ p.Employname }}</td>
-                <td>₹ {{ p.Salary }}</td>
-                <td>{{ p.Present }}</td>
-                <td>{{ p.HalfDay }}</td>
-                <td>{{ p.Absent }}</td>
-                <td><b>₹ {{ p.TotalSalary }}</b></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-
-    </table>
-
-</div>
-
-
-
+                {% endfor %}
+               </tbody>
+               </table>
+               </div>
 
 
 
@@ -178,7 +256,25 @@ color: white;
 
 
 </head>
-<body>
+
     
 </body>
+
+<!-- agar scorrl ke baja ye text size hi small kar nni ho to -->
+
+<!-- <script>
+document.querySelectorAll('.cell-scroll').forEach(function(cell) {
+
+    let fontSize = 14;
+
+    while (cell.scrollWidth > cell.clientWidth && fontSize > 4) {
+
+        fontSize--;
+
+        cell.style.fontSize = fontSize + 'px';
+    }
+
+});
+</script> -->
+
 </html>

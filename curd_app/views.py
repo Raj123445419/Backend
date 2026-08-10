@@ -1,293 +1,607 @@
-from urllib import request
-from django.shortcuts import redirect, render
-from curd_app.models import Employ_Att, Employ_Data
 
-# Create your views here.
-from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 
+from curd_app.models import Employ_Data, Employ_Att
 
 
+# =========================================================
+# EMPLOYEE LIST + ADD EMPLOYEE
+# =========================================================
 
-
-
-
-# def Employ_list(request):
-#       return render(request, 'Employ_list.html')
-
-# def Delete(request):
-#       return render(request, 'Delete.html')
-
-
-# def Edite(request):
-#       return render(request, 'Edite.html')
-
-
-
-
-
-# def Employ_attendance(request):
-#       return render(request, 'Employ_attendance.html')
-
-
-
-
-# def Delete_attendance(request):
-#       return render(request, 'Delete_attendance.html')
-
-
-
-# def Employ_Sallery(request):
-#       return render(request, 'Employ_Sallery.html')
-
-
-
-# def Edite_attendance(request):
-#       return render(request, 'Edite_attendance.html')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+@csrf_exempt
 def Employ_list(request):
 
+    if request.method == "GET":
+
+        employees = Employ_Data.objects.all()
+
+        data = []
+
+        for employee in employees:
+
+            data.append({
+                "EmployId": employee.EmployId,
+                "Employname": employee.Employname,
+                "Address": employee.Address,
+                "Employrole": employee.Employrole,
+                "Designation": employee.Designation,
+                "Experince": employee.Experince,
+                "Salary": employee.Salary,
+            })
+
+        return JsonResponse(data, safe=False)
+
+
+    # -----------------------------------------------------
+    # ADD EMPLOYEE
+    # -----------------------------------------------------
+
     if request.method == "POST":
 
-        Employ_Data.objects.create(
-            Employname=request.POST['Employname'],
-            Address=request.POST['Address'],
-            Employrole=request.POST['Employrole'],
-            Designation=request.POST['Designation'],
-            Experince=request.POST['Experince'],
-            Salary=request.POST['Salary'],
+        employee = Employ_Data.objects.create(
+
+            Employname=request.POST.get(
+                "Employname",
+                ""
+            ),
+
+            Address=request.POST.get(
+                "Address",
+                ""
+            ),
+
+            Employrole=request.POST.get(
+                "Employrole",
+                ""
+            ),
+
+            Designation=request.POST.get(
+                "Designation",
+                ""
+            ),
+
+            Experince=request.POST.get(
+                "Experince",
+                ""
+            ),
+
+            Salary=request.POST.get(
+                "Salary",
+                ""
+            ),
         )
 
-        return redirect('Employ_list')
-
-    data = Employ_Data.objects.all()
-
-    return render(request, 'Employ_list.html', {
-        'data': data
-    })
-
-# def Add_employ(request):
-#       return render(request, 'Add_employ.html')
+        return JsonResponse({
+            "success": True,
+            "message": "Employee added successfully",
+            "EmployId": employee.EmployId,
+        })
 
 
+    # -----------------------------------------------------
+    # INVALID METHOD
+    # -----------------------------------------------------
 
-def Delete(request,id):
+    return JsonResponse(
+        {
+            "success": False,
+            "error": "Method not allowed"
+        },
+        status=405
+    )
 
-    employee = Employ_Data.objects.get(EmployId=id)
 
-    employee.delete()
+# =========================================================
+# DELETE EMPLOYEE
+# =========================================================
 
-    return redirect('Employ_list')
+@csrf_exempt
+def Delete(request, id):
+
+    if request.method in ["DELETE", "POST"]:
+
+        employee = get_object_or_404(
+            Employ_Data,
+            EmployId=id
+        )
+
+        employee.delete()
+
+        return JsonResponse({
+            "success": True,
+            "message": "Employee deleted successfully"
+        })
 
 
+    return JsonResponse(
+        {
+            "success": False,
+            "error": "Method not allowed"
+        },
+        status=405
+    )
 
+
+# =========================================================
+# EDIT EMPLOYEE
+# =========================================================
+
+@csrf_exempt
 def Edite(request, id):
 
+    employee = get_object_or_404(
+        Employ_Data,
+        EmployId=id
+    )
 
-    employee = Employ_Data.objects.get(EmployId=id)
 
+    # -----------------------------------------------------
+    # GET EMPLOYEE
+    # -----------------------------------------------------
+
+    if request.method == "GET":
+
+        return JsonResponse({
+
+            "EmployId": employee.EmployId,
+
+            "Employname": employee.Employname,
+
+            "Address": employee.Address,
+
+            "Employrole": employee.Employrole,
+
+            "Designation": employee.Designation,
+
+            "Experince": employee.Experince,
+
+            "Salary": employee.Salary,
+        })
+
+
+    # -----------------------------------------------------
+    # UPDATE EMPLOYEE
+    # -----------------------------------------------------
 
     if request.method == "POST":
 
-        employee.Employname = request.POST.get('Employname')
-        employee.Address = request.POST.get('Address')
-        employee.Employrole = request.POST.get('Employrole')
-        employee.Designation = request.POST.get('Designation')
-        employee.Experince = request.POST.get('Experince')
-        employee.Salary = request.POST.get('Salary')
+        employee.Employname = request.POST.get(
+            "Employname",
+            ""
+        )
+
+        employee.Address = request.POST.get(
+            "Address",
+            ""
+        )
+
+        employee.Employrole = request.POST.get(
+            "Employrole",
+            ""
+        )
+
+        employee.Designation = request.POST.get(
+            "Designation",
+            ""
+        )
+
+        employee.Experince = request.POST.get(
+            "Experince",
+            ""
+        )
+
+        employee.Salary = request.POST.get(
+            "Salary",
+            ""
+        )
 
         employee.save()
 
-        return redirect('Employ_list')
-
-    return render(request, 'Edite.html', {
-        'employee': employee
-    })
-
-
-
-
-
-def Employ_attendance(request):
-
-    if request.method == "POST":
-
-        try:
-            emp = Employ_Data.objects.get(
-                EmployId=request.POST['EmployId']
-            )
-
-            date = request.POST['Date']
-            status = request.POST['Status']
-
-            attendance = Employ_Att.objects.filter(
-                EmployId=emp.EmployId,
-                Date=date
-            ).first()
-
-            if attendance:
-                return render(request, 'Employ_attendance.html', {
-                    'attendance': Employ_Att.objects.all(),
-                    'error': 'This employee attendance is already marked for this date.'
-                })
-
-            Employ_Att.objects.create(
-                EmployId=emp.EmployId,
-                Employname=emp.Employname,
-                Date=date,
-                Status=status
-            )
-
-            return redirect('Employ_attendance')
-
-        except Employ_Data.DoesNotExist:
-            return render(request, 'Employ_attendance.html', {
-                'attendance': Employ_Att.objects.all(),
-                'error': 'Employee ID not found.'
-            })
-
-    attendance = Employ_Att.objects.all()
-
-    return render(request, 'Employ_attendance.html', {
-        'attendance': attendance
-    })
-
-
-
-
-
-def Delete_attendance(request, id):
-
-    Employ_Att.objects.filter(id=id).delete()
-
-    return redirect('Employ_attendance')
-
-
-
-
-def Employ_Sallery(request):
-
-    employees = Employ_Data.objects.all()
-    salary_data = []
-
-    for emp in employees:
-
-        # Attendance Count
-        present = Employ_Att.objects.filter(
-            EmployId=emp.EmployId,
-            Status="Present"
-        ).count()
-
-        half_day = Employ_Att.objects.filter(
-            EmployId=emp.EmployId,
-            Status="Half Day"
-        ).count()
-
-        absent = Employ_Att.objects.filter(
-            EmployId=emp.EmployId,
-            Status="Absent"
-        ).count()
-
-
-        monthly_salary = float(emp.Salary)
-
-        per_day_salary = monthly_salary / 31
-
-    
-        total_salary = (
-            (present * per_day_salary) +
-            (half_day * 0.5 * per_day_salary)
-        )
-
-        salary_data.append({
-            "EmployId": emp.EmployId,
-            "Employname": emp.Employname,
-            "Salary": monthly_salary,
-            "Present": present,
-            "HalfDay": half_day,
-            "Absent": absent,
-            "TotalSalary": round(total_salary, 2),
+        return JsonResponse({
+            "success": True,
+            "message": "Employee updated successfully"
         })
 
-    return render(request, "Employ_Sallery.html", {
-        "salary_data": salary_data
-    })
+
+    return JsonResponse(
+        {
+            "success": False,
+            "error": "Method not allowed"
+        },
+        status=405
+    )
 
 
+# =========================================================
+# ATTENDANCE LIST + ADD ATTENDANCE
+# =========================================================
+
+@csrf_exempt
+def Employ_attendance(request):
+
+    # -----------------------------------------------------
+    # GET ATTENDANCE
+    # -----------------------------------------------------
+
+    if request.method == "GET":
+
+        attendance = Employ_Att.objects.all()
+
+        data = []
+
+        for item in attendance:
+
+            data.append({
+
+                "id": item.id,
+
+                "EmployId": item.EmployId,
+
+                "Employname": item.Employname,
+
+                "Date": str(item.Date),
+
+                "Status": item.Status,
+            })
+
+        return JsonResponse(
+            data,
+            safe=False
+        )
 
 
-def Edite_attendance(request, id):
-
-    attendance = Employ_Att.objects.filter(id=id).first()
-
-    if attendance is None:
-        return redirect('Employ_attendance')
+    # -----------------------------------------------------
+    # ADD ATTENDANCE
+    # -----------------------------------------------------
 
     if request.method == "POST":
 
-        attendance.Date = request.POST['Date']
-        attendance.Status = request.POST['Status']
+        employ_id = request.POST.get(
+            "EmployId"
+        )
+
+        date = request.POST.get(
+            "Date"
+        )
+
+        status = request.POST.get(
+            "Status"
+        )
+
+
+        # -------------------------------------------------
+        # CHECK EMPLOYEE
+        # -------------------------------------------------
+
+        try:
+
+            employee = Employ_Data.objects.get(
+                EmployId=employ_id
+            )
+
+        except Employ_Data.DoesNotExist:
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "error": "Employee ID not found."
+                },
+                status=404
+            )
+
+
+        # -------------------------------------------------
+        # CHECK DUPLICATE ATTENDANCE
+        # -------------------------------------------------
+
+        existing_attendance = Employ_Att.objects.filter(
+
+            EmployId=employee.EmployId,
+
+            Date=date
+
+        ).first()
+
+
+        if existing_attendance:
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "error":
+                        "This employee attendance is already "
+                        "marked for this date."
+                },
+                status=400
+            )
+
+
+        # -------------------------------------------------
+        # CREATE ATTENDANCE
+        # -------------------------------------------------
+
+        attendance = Employ_Att.objects.create(
+
+            EmployId=employee.EmployId,
+
+            Employname=employee.Employname,
+
+            Date=date,
+
+            Status=status
+        )
+
+
+        return JsonResponse({
+            "success": True,
+            "message": "Attendance added successfully",
+            "id": attendance.id
+        })
+
+
+    # -----------------------------------------------------
+    # INVALID METHOD
+    # -----------------------------------------------------
+
+    return JsonResponse(
+        {
+            "success": False,
+            "error": "Method not allowed"
+        },
+        status=405
+    )
+
+
+# =========================================================
+# DELETE ATTENDANCE
+# =========================================================
+
+@csrf_exempt
+def Delete_attendance(request, id):
+
+    if request.method in ["DELETE", "POST"]:
+
+        attendance = get_object_or_404(
+            Employ_Att,
+            id=id
+        )
+
+        attendance.delete()
+
+        return JsonResponse({
+            "success": True,
+            "message": "Attendance deleted successfully"
+        })
+
+
+    return JsonResponse(
+        {
+            "success": False,
+            "error": "Method not allowed"
+        },
+        status=405
+    )
+
+
+# =========================================================
+# EDIT ATTENDANCE
+# =========================================================
+
+@csrf_exempt
+def Edite_attendance(request, id):
+
+    attendance = get_object_or_404(
+        Employ_Att,
+        id=id
+    )
+
+
+    # -----------------------------------------------------
+    # GET ATTENDANCE
+    # -----------------------------------------------------
+
+    if request.method == "GET":
+
+        return JsonResponse({
+
+            "id": attendance.id,
+
+            "EmployId": attendance.EmployId,
+
+            "Employname": attendance.Employname,
+
+            "Date": str(attendance.Date),
+
+            "Status": attendance.Status,
+        })
+
+
+    # -----------------------------------------------------
+    # UPDATE ATTENDANCE
+    # -----------------------------------------------------
+
+    if request.method == "POST":
+
+        attendance.Date = request.POST.get(
+            "Date"
+        )
+
+        attendance.Status = request.POST.get(
+            "Status"
+        )
 
         attendance.save()
 
-        return redirect('Employ_attendance')
-
-    return render(request, 'Edite_attendance.html', {
-        'attendance': attendance
-    })
-
+        return JsonResponse({
+            "success": True,
+            "message": "Attendance updated successfully"
+        })
 
 
+    return JsonResponse(
+        {
+            "success": False,
+            "error": "Method not allowed"
+        },
+        status=405
+    )
 
+
+# =========================================================
+# SALARY
+# =========================================================
+
+def Employ_Sallery(request):
+
+    # -----------------------------------------------------
+    # ONLY GET ALLOWED
+    # -----------------------------------------------------
+
+    if request.method != "GET":
+
+        return JsonResponse(
+            {
+                "success": False,
+                "error": "Method not allowed"
+            },
+            status=405
+        )
+
+
+    employees = Employ_Data.objects.all()
+
+    salary_data = []
+
+
+    # -----------------------------------------------------
+    # CALCULATE SALARY FOR EVERY EMPLOYEE
+    # -----------------------------------------------------
+
+    for employee in employees:
+
+
+        # -------------------------------------------------
+        # PRESENT COUNT
+        # -------------------------------------------------
+
+        present = Employ_Att.objects.filter(
+
+            EmployId=employee.EmployId,
+
+            Status="Present"
+
+        ).count()
+
+
+        # -------------------------------------------------
+        # HALF DAY COUNT
+        # -------------------------------------------------
+
+        half_day = Employ_Att.objects.filter(
+
+            EmployId=employee.EmployId,
+
+            Status="Half Day"
+
+        ).count()
+
+
+        # -------------------------------------------------
+        # ABSENT COUNT
+        # -------------------------------------------------
+
+        absent = Employ_Att.objects.filter(
+
+            EmployId=employee.EmployId,
+
+            Status="Absent"
+
+        ).count()
+
+
+        # -------------------------------------------------
+        # MONTHLY SALARY
+        # -------------------------------------------------
+
+        try:
+
+            monthly_salary = float(
+                employee.Salary
+            )
+
+        except (
+            ValueError,
+            TypeError
+        ):
+
+            monthly_salary = 0
+
+
+        # -------------------------------------------------
+        # PER DAY SALARY
+        # -------------------------------------------------
+
+        per_day_salary = (
+            monthly_salary / 31
+        )
+
+
+        # -------------------------------------------------
+        # TOTAL SALARY
+        # -------------------------------------------------
+
+        total_salary = (
+
+            present * per_day_salary
+
+        ) + (
+
+            half_day
+            * 0.5
+            * per_day_salary
+
+        )
+
+
+        # -------------------------------------------------
+        # ADD TO RESPONSE
+        # -------------------------------------------------
+
+        salary_data.append({
+
+            "EmployId":
+                employee.EmployId,
+
+            "Employname":
+                employee.Employname,
+
+            "Salary":
+                monthly_salary,
+
+            "Present":
+                present,
+
+            "HalfDay":
+                half_day,
+
+            "Absent":
+                absent,
+
+            "TotalSalary":
+                round(
+                    total_salary,
+                    2
+                ),
+        })
+
+
+    # -----------------------------------------------------
+    # RETURN JSON
+    # -----------------------------------------------------
+
+    return JsonResponse(
+        salary_data,
+        safe=False
+    )

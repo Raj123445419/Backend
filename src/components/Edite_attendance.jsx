@@ -6,7 +6,7 @@ import "../App.css";
 // DJANGO BACKEND URL
 // =====================================================
 
-const API_URL = "/django-api";
+const API_URL = "https://curd-opration-0.onrender.com";
 
 // =====================================================
 // EDIT ATTENDANCE COMPONENT

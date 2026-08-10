@@ -3,7 +3,7 @@
 
 
 
-  const API_URL = "/django-api";
+  const API_URL = "https://curd-opration-0.onrender.com";
 
 
   const Employ_Sallery = () => {

@@ -1,9 +1,11 @@
+
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 // =====================================================
 // DJANGO BACKEND URL
 // =====================================================
+
 const API_URL = "https://backend-z4sf.onrender.com";
 
 // =====================================================
@@ -118,8 +120,6 @@ const Employ_attendance = () => {
               "application/json"
           },
 
-          credentials: "include",
-
           body: new URLSearchParams(formData)
         }
       );
@@ -187,15 +187,15 @@ const Employ_attendance = () => {
 
   // ================= EDIT =================
 
-const handleEdit = (item) => {
+  const handleEdit = (item) => {
 
-  navigate(`/edit-attendance/${item.id}`, {
-    state: {
-      attendance: item
-    }
-  });
+    navigate(`/edit-attendance/${item.id}`, {
+      state: {
+        attendance: item
+      }
+    });
 
-};
+  };
 
   // ================= DELETE =================
 
@@ -285,83 +285,78 @@ const handleEdit = (item) => {
       {/* =====================================================
           NAVBAR
       ====================================================== */}
-<div className="all">
-      <nav className="navbar navbar-expand-sm">
 
-        <div className="container-fluid">
+      <div className="container-fluid">
 
-          <Link
-            className="navbar-brand fontnav px-2 px-md-3 cl1"
-            to="/"
-          >
-            Employ Management System
-          </Link>
+        <Link
+          className="navbar-brand fontnav px-2 px-md-3 cl1"
+          to="/"
+        >
+          Employ Management System
+        </Link>
 
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#collapsibleNavbar"
-          >
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapsibleNavbar"
+        >
 
-            <span className="navbar-toggler-icon"></span>
+          <span className="navbar-toggler-icon"></span>
 
-          </button>
+        </button>
 
-          <div
-            className="collapse navbar-collapse"
-            id="collapsibleNavbar"
-          >
+        <div
+          className="collapse navbar-collapse"
+          id="collapsibleNavbar"
+        >
 
-            <ul className="navbar-nav ms-auto">
+          <ul className="navbar-nav ms-auto">
 
-              {/* Employ List */}
+            {/* Employ List */}
 
-              <li className="nav-item">
+            <li className="nav-item">
 
-                <Link
-                  className="nav-link px-2 px-md-3 cl1"
-                  to="/"
-                >
-                  Employ List
-                </Link>
+              <Link
+                className="nav-link px-2 px-md-3 cl1"
+                to="/"
+              >
+                Employ List
+              </Link>
 
-              </li>
+            </li>
 
-              {/* Employ Attendance */}
+            {/* Employ Attendance */}
 
-              <li className="nav-item">
+            <li className="nav-item">
 
-                <Link
-                  className="nav-link px-2 px-md-3 cl1"
-                  to="/attendance"
-                >
-                  Employ Attendance
-                </Link>
+              <Link
+                className="nav-link px-2 px-md-3 cl1"
+                to="/attendance"
+              >
+                Employ Attendance
+              </Link>
 
-              </li>
+            </li>
 
-              {/* Employ Salary */}
+            {/* Employ Salary */}
 
-              <li className="nav-item">
+            <li className="nav-item">
 
-                <Link
-                  className="nav-link px-2 px-md-3 cl1"
-                  to="/salary"
-                >
-                  Employ Sallery Count
-                </Link>
+              <Link
+                className="nav-link px-2 px-md-3 cl1"
+                to="/salary"
+              >
+                Employ Sallery Count
+              </Link>
 
-              </li>
+            </li>
 
-            </ul>
-
-          </div>
+          </ul>
 
         </div>
 
-      </nav>
-</div>
+      </div>
 
       {/* =====================================================
           MAIN CONTAINER
@@ -376,7 +371,6 @@ const handleEdit = (item) => {
           </h1>
 
         </div>
-
 
         {/* ================= ATTENDANCE FORM ================= */}
 
@@ -414,7 +408,6 @@ const handleEdit = (item) => {
 
                       </div>
 
-
                       {/* DATE */}
 
                       <div className="col-md-6 mb-3">
@@ -433,7 +426,6 @@ const handleEdit = (item) => {
                         />
 
                       </div>
-
 
                       {/* STATUS */}
 
@@ -475,7 +467,6 @@ const handleEdit = (item) => {
 
                   </div>
 
-
                   {/* ================= FOOTER BUTTONS ================= */}
 
                   <div className="card-footer text-center">
@@ -507,7 +498,6 @@ const handleEdit = (item) => {
 
         </div>
 
-
         {/* ================= ERROR ================= */}
 
         {error && (
@@ -519,7 +509,6 @@ const handleEdit = (item) => {
           </div>
 
         )}
-
 
         {/* ================= ATTENDANCE LIST ================= */}
 
@@ -605,7 +594,12 @@ const handleEdit = (item) => {
                         <td>
 
                           <div className="cell-scroll">
-                            {i.Date ? i.Date.split("-").reverse().join("-") : ""}
+                            {i.Date
+                              ? i.Date
+                                  .split("-")
+                                  .reverse()
+                                  .join("-")
+                              : ""}
                           </div>
 
                         </td>
@@ -617,7 +611,6 @@ const handleEdit = (item) => {
                           </div>
 
                         </td>
-
 
                         {/* EDIT */}
 
@@ -633,7 +626,6 @@ const handleEdit = (item) => {
                           </button>
 
                         </td>
-
 
                         {/* DELETE */}
 
@@ -674,3 +666,4 @@ const handleEdit = (item) => {
 };
 
 export default Employ_attendance;
+

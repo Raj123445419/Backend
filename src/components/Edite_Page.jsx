@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -71,8 +72,6 @@ const Edite_Page = () => {
               "application/json"
           },
 
-          credentials: "include",
-
           body: new URLSearchParams(formData)
         }
       );
@@ -88,7 +87,11 @@ const Edite_Page = () => {
 
       } else {
 
+        const data =
+          await response.json().catch(() => ({}));
+
         alert(
+          data.error ||
           "Employee Update Failed"
         );
 
@@ -149,7 +152,6 @@ const Edite_Page = () => {
 
           <div className="card edit-employee-card">
 
-
             {/* ================= HEADER ================= */}
 
             <div className="card-header edit-employee-header">
@@ -158,13 +160,11 @@ const Edite_Page = () => {
 
             </div>
 
-
             {/* ================= BODY ================= */}
 
             <div className="card-body">
 
               <form onSubmit={handleSubmit}>
-
 
                 {/* ================= EMPLOYEE NAME ================= */}
 
@@ -185,7 +185,6 @@ const Edite_Page = () => {
 
                 </div>
 
-
                 {/* ================= ADDRESS ================= */}
 
                 <div className="mb-3">
@@ -204,7 +203,6 @@ const Edite_Page = () => {
                   />
 
                 </div>
-
 
                 {/* ================= EMPLOYEE ROLE ================= */}
 
@@ -225,7 +223,6 @@ const Edite_Page = () => {
 
                 </div>
 
-
                 {/* ================= DESIGNATION ================= */}
 
                 <div className="mb-3">
@@ -244,7 +241,6 @@ const Edite_Page = () => {
                   />
 
                 </div>
-
 
                 {/* ================= EXPERIENCE ================= */}
 
@@ -265,7 +261,6 @@ const Edite_Page = () => {
 
                 </div>
 
-
                 {/* ================= SALARY ================= */}
 
                 <div className="mb-3">
@@ -285,7 +280,6 @@ const Edite_Page = () => {
 
                 </div>
 
-
                 {/* ================= BUTTONS ================= */}
 
                 <div className="text-center">
@@ -303,7 +297,6 @@ const Edite_Page = () => {
 
                   </button>
 
-
                   <button
                     type="button"
                     className="btn btn-secondary"
@@ -313,7 +306,6 @@ const Edite_Page = () => {
                   </button>
 
                 </div>
-
 
               </form>
 
@@ -332,3 +324,4 @@ const Edite_Page = () => {
 };
 
 export default Edite_Page;
+

@@ -5,7 +5,6 @@ import { useNavigate, Link } from "react-router-dom";
 // =====================================================
 // DJANGO BACKEND URL
 // =====================================================
-
 const API_URL = "https://backend-z4sf.onrender.com";
 
 // =====================================================
@@ -285,79 +284,83 @@ const Employ_attendance = () => {
       {/* =====================================================
           NAVBAR
       ====================================================== */}
+<div className="all">
+      <nav className="navbar navbar-expand-sm">
 
-      <div className="container-fluid">
+        <div className="container-fluid">
 
-        <Link
-          className="navbar-brand fontnav px-2 px-md-3 cl1"
-          to="/"
-        >
-          Employ Management System
-        </Link>
+          <Link
+            className="navbar-brand fontnav px-2 px-md-3 cl1"
+            to="/"
+          >
+            Employ Management System
+          </Link>
 
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#collapsibleNavbar"
-        >
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapsibleNavbar"
+          >
 
-          <span className="navbar-toggler-icon"></span>
+            <span className="navbar-toggler-icon"></span>
 
-        </button>
+          </button>
 
-        <div
-          className="collapse navbar-collapse"
-          id="collapsibleNavbar"
-        >
+          <div
+            className="collapse navbar-collapse"
+            id="collapsibleNavbar"
+          >
 
-          <ul className="navbar-nav ms-auto">
+            <ul className="navbar-nav ms-auto">
 
-            {/* Employ List */}
+              {/* Employ List */}
 
-            <li className="nav-item">
+              <li className="nav-item">
 
-              <Link
-                className="nav-link px-2 px-md-3 cl1"
-                to="/"
-              >
-                Employ List
-              </Link>
+                <Link
+                  className="nav-link px-2 px-md-3 cl1"
+                  to="/"
+                >
+                  Employ List
+                </Link>
 
-            </li>
+              </li>
 
-            {/* Employ Attendance */}
+              {/* Employ Attendance */}
 
-            <li className="nav-item">
+              <li className="nav-item">
 
-              <Link
-                className="nav-link px-2 px-md-3 cl1"
-                to="/attendance"
-              >
-                Employ Attendance
-              </Link>
+                <Link
+                  className="nav-link px-2 px-md-3 cl1"
+                  to="/attendance"
+                >
+                  Employ Attendance
+                </Link>
 
-            </li>
+              </li>
 
-            {/* Employ Salary */}
+              {/* Employ Salary */}
 
-            <li className="nav-item">
+              <li className="nav-item">
 
-              <Link
-                className="nav-link px-2 px-md-3 cl1"
-                to="/salary"
-              >
-                Employ Sallery Count
-              </Link>
+                <Link
+                  className="nav-link px-2 px-md-3 cl1"
+                  to="/salary"
+                >
+                  Employ Sallery Count
+                </Link>
 
-            </li>
+              </li>
 
-          </ul>
+            </ul>
+
+          </div>
 
         </div>
 
-      </div>
-
+      </nav>
+</div>
       {/* =====================================================
           MAIN CONTAINER
       ====================================================== */}
@@ -594,12 +597,7 @@ const Employ_attendance = () => {
                         <td>
 
                           <div className="cell-scroll">
-                            {i.Date
-                              ? i.Date
-                                  .split("-")
-                                  .reverse()
-                                  .join("-")
-                              : ""}
+                            {i.Date ? i.Date.split("-").reverse().join("-") : ""}
                           </div>
 
                         </td>
@@ -666,4 +664,3 @@ const Employ_attendance = () => {
 };
 
 export default Employ_attendance;
-

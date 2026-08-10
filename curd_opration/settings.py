@@ -10,7 +10,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
-    "curd-opration-0.onrender.com",
+    "backend-z4sf.onrender.com",
 ]
 
 

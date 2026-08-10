@@ -9,7 +9,7 @@ export default defineConfig({
 
     proxy: {
       "/django-api": {
-        target: "http://127.0.0.1:8000",
+        target: "https://curd-opration-0.onrender.com",
         changeOrigin: true,
         secure: false,
 

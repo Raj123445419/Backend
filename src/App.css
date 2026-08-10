@@ -1,0 +1,411 @@
+
+
+.all {
+  background-color: #1F2937;
+  font-family: "Edu VIC WA NT Hand", cursive;
+  font-size: 15px;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.fontnav {
+  font-family: "Edu VIC WA NT Hand", cursive;
+  font-size: 15px;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.cl1 {
+  color: white;
+}
+
+.cl1:hover {
+  color: #38BDF8;
+}
+
+
+
+
+.add {
+  background-color: #22C55E;
+  color: #FFFFFF;
+  font-family: "Noto Serif", serif;
+  height: 40px;
+  width: 150px;
+  margin-top: 10px;
+}
+
+.add:hover {
+  background-color: #198754;
+  color: #FDE047;
+}
+
+
+
+
+.alltext {
+  font-family: "Spectral", serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+
+
+.btn-edit {
+  color: #1d4ed8;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+}
+
+.btn-edit:hover {
+  color: #ffffff;
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+
+
+.btn-delete {
+  color: #dc2626;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+.btn-delete:hover {
+  color: #ffffff;
+  background-color: #dc2626;
+  border-color: #dc2626;
+}
+
+
+
+
+.employee-table-box {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.employee-table {
+  width: 100%;
+  table-layout: fixed;
+  margin-bottom: 0;
+}
+
+.employee-table th,
+.employee-table td {
+  max-width: 180px;
+  overflow: hidden;
+}
+
+
+
+
+.cell-scroll {
+  width: 100%;
+  max-width: 180px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  scrollbar-width: thin;
+}
+
+.cell-scroll::-webkit-scrollbar {
+  height: 5px;
+}
+
+.cell-scroll::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+}
+
+
+
+.employee-table td:last-child,
+.employee-table td:nth-last-child(2) {
+  width: 80px;
+  max-width: 80px;
+}
+
+
+
+
+.custom-modal {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.5);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 9999;
+
+  padding: 15px;
+}
+
+.modal-box {
+  background: white;
+
+  width: 100%;
+  max-width: 800px;
+
+  border-radius: 8px;
+
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+
+  max-height: 95vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 15px 20px;
+
+  background-color: #f8f9fa;
+
+  border-bottom: 1px solid #ddd;
+}
+
+.modal-header h5 {
+  margin: 0;
+
+  color: #0d6efd;
+
+  font-weight: bold;
+}
+
+.close-btn {
+  border: none;
+
+  background: transparent;
+
+  font-size: 28px;
+
+  cursor: pointer;
+
+  line-height: 1;
+}
+
+.modal-body {
+  padding: 25px;
+}
+
+.modal-footer {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  padding: 15px 20px;
+
+  background-color: #f8f9fa;
+
+  border-top: 1px solid #ddd;
+}
+
+
+
+
+@media (max-width: 768px) {
+
+  .employee-table {
+    font-size: 13px;
+  }
+
+  .employee-table th,
+  .employee-table td {
+    padding: 8px 6px;
+  }
+
+  .cell-scroll {
+    max-width: 100px;
+  }
+
+  .employee-table td:last-child,
+  .employee-table td:nth-last-child(2) {
+    width: 65px;
+    max-width: 65px;
+  }
+
+  .btn-sm {
+    font-size: 11px;
+    padding: 4px 7px;
+  }
+
+}
+
+
+
+
+@media (max-width: 480px) {
+
+  .employee-table {
+    font-size: 12px;
+  }
+
+  .employee-table th,
+  .employee-table td {
+    padding: 6px 4px;
+  }
+
+  .cell-scroll {
+    max-width: 75px;
+  }
+
+  .employee-table td:last-child,
+  .employee-table td:nth-last-child(2) {
+    width: 58px;
+    max-width: 58px;
+  }
+
+  .btn-sm {
+    font-size: 10px;
+    padding: 3px 5px;
+  }
+
+}
+
+
+
+
+/* Edit Attendance */
+
+.edit-attendance-card {
+    margin-top: 40px;
+    border-radius: 15px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+}
+
+.edit-attendance-header {
+    background: #0d6efd;
+    color: white;
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.edit-attendance-card .btn-success {
+    width: 150px;
+}
+
+.edit-attendance-card .btn-secondary {
+    width: 150px;
+}
+
+
+
+
+
+
+
+body {
+  background: #f5f5f5;
+}
+
+.edit-employee-card {
+  margin-top: 40px;
+  border-radius: 15px;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+}
+
+.edit-employee-header {
+  background: #0d6efd;
+  color: white;
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.edit-employee-card .btn-success {
+  width: 150px;
+}
+
+.edit-employee-card .btn-secondary {
+  width: 150px;
+}
+
+
+
+
+.edit-employee-card {
+    margin-top: 40px;
+    border-radius: 15px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+}
+
+.edit-employee-header {
+    background: #0d6efd;
+    color: white;
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.edit-employee-card .btn-success {
+    width: 150px;
+}
+
+.edit-employee-card .btn-secondary {
+    width: 150px;
+}
+
+
+
+.salary-table {
+    width: 100%;
+    max-width: 100%;
+    table-layout: fixed;
+}
+
+.salary-table th,
+.salary-table td {
+    max-width: 180px;
+    overflow: hidden;
+}
+
+.cell-scroll {
+    width: 100%;
+    max-width: 180px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    scrollbar-width: thin;
+}
+
+@media (max-width: 768px) {
+
+    .salary-table {
+        font-size: 13px;
+    }
+
+    .salary-table th,
+    .salary-table td {
+        padding: 8px 6px;
+    }
+
+    .cell-scroll {
+        max-width: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .salary-table {
+        font-size: 12px;
+    }
+
+    .salary-table th,
+    .salary-table td {
+        padding: 6px 4px;
+    }
+
+    .cell-scroll {
+        max-width: 75px;
+    }
+}

@@ -8,7 +8,7 @@ import "../App.css";
 // DJANGO BACKEND URL
 // =====================================================
 
-const API_URL = "https://curd-opration-0.onrender.com";
+const API_URL = "https://backend-z4sf.onrender.com";
 
 
 // =====================================================

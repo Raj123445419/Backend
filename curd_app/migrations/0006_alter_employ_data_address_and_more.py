@@ -38,6 +38,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='employ_data',
             name='Salary',
-            field=models.CharField(max_length=2000000000000000000000000000000000000000000000000000000000000000000000000000000000000000),
+            field=models.CharField(max_length=9000000),
         ),
     ]

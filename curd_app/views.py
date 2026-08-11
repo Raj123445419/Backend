@@ -1,8 +1,15 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
 
-from curd_app.models import Employ_Data, Employ_Att
+from curd_app.models import (
+    Employ_Data,
+    Employ_Att,
+    Employ_Salary
+)
+
+from decimal import Decimal, InvalidOperation
 
 
 # =========================================================
@@ -18,8 +25,9 @@ def Employ_list(request):
 
     if request.method == "GET":
 
-        # EmployId ke according fixed order
-        employees = Employ_Data.objects.all().order_by("EmployId")
+        employees = Employ_Data.objects.all().order_by(
+            "EmployId"
+        )
 
         data = []
 
@@ -95,8 +103,7 @@ def Employ_list(request):
 
         return JsonResponse({
 
-            "success":
-                True,
+            "success": True,
 
             "message":
                 "Employee added successfully",
@@ -135,23 +142,20 @@ def Delete(request, id):
         # =================================================
         # IMPORTANT
         #
-        # Employee delete hone par ATTENDANCE DELETE
-        # NAHI hogi.
+        # Yahan Employ_Salary ko delete nahi karna.
         #
-        # Attendance database me safe rahegi.
-        #
-        # Isliye Salary bhi safe rahegi.
+        # Isliye employee delete hone ke baad bhi
+        # salary page ka record safe rahega.
         # =================================================
 
         employee.delete()
 
         return JsonResponse({
 
-            "success":
-                True,
+            "success": True,
 
             "message":
-                "Employee deleted successfully. Attendance records are preserved."
+                "Employee deleted successfully. Salary record preserved."
         })
 
     return JsonResponse(
@@ -211,18 +215,10 @@ def Edite(request, id):
 
     if request.method == "POST":
 
-        # -------------------------------------------------
-        # NEW EMPLOYEE NAME
-        # -------------------------------------------------
-
         new_name = request.POST.get(
             "Employname",
             ""
         )
-
-        # -------------------------------------------------
-        # UPDATE EMPLOYEE DATA
-        # -------------------------------------------------
 
         employee.Employname = new_name
 
@@ -251,36 +247,37 @@ def Edite(request, id):
             ""
         )
 
-        # -------------------------------------------------
-        # SAVE EMPLOYEE
-        # -------------------------------------------------
-
         employee.save()
 
         # =================================================
-        # IMPORTANT
-        #
-        # Employee ka name aur salary change hone par
-        # existing attendance records me bhi update hoga.
-        #
-        # Employee delete hone par ye records delete
-        # nahi hote.
+        # UPDATE EXISTING ATTENDANCE NAME
         # =================================================
 
         Employ_Att.objects.filter(
             EmployId=employee.EmployId
         ).update(
-            Employname=new_name,
-            Salary=employee.Salary
+            Employname=new_name
+        )
+
+        # =================================================
+        # IMPORTANT
+        #
+        # Existing salary records ka naam bhi update hoga.
+        # MonthlySalary change nahi kar rahe yahan.
+        # =================================================
+
+        Employ_Salary.objects.filter(
+            EmployId=employee.EmployId
+        ).update(
+            Employname=new_name
         )
 
         return JsonResponse({
 
-            "success":
-                True,
+            "success": True,
 
             "message":
-                "Employee and attendance records updated successfully"
+                "Employee, attendance and salary name updated successfully"
         })
 
     # =====================================================
@@ -309,8 +306,9 @@ def Employ_attendance(request):
 
     if request.method == "GET":
 
-        # Attendance ID ke according fixed order
-        attendance = Employ_Att.objects.all().order_by("id")
+        attendance = Employ_Att.objects.all().order_by(
+            "id"
+        )
 
         data = []
 
@@ -332,10 +330,6 @@ def Employ_attendance(request):
 
                 "Status":
                     item.Status,
-
-                # Salary bhi frontend ko bhej rahe hain
-                "Salary":
-                    item.Salary,
             })
 
         return JsonResponse(
@@ -376,7 +370,6 @@ def Employ_attendance(request):
             return JsonResponse(
                 {
                     "success": False,
-
                     "error":
                         "Employee ID not found."
                 },
@@ -411,16 +404,6 @@ def Employ_attendance(request):
         # =================================================
         # CREATE ATTENDANCE
         # =================================================
-        #
-        # IMPORTANT:
-        #
-        # Employee ki Salary Attendance ke andar save
-        # kar rahe hain.
-        #
-        # Isse Employee delete hone ke baad bhi Salary
-        # calculate ho sakti hai.
-        #
-        # =================================================
 
         attendance = Employ_Att.objects.create(
 
@@ -430,15 +413,94 @@ def Employ_attendance(request):
             Employname=
                 employee.Employname,
 
-            Salary=
-                employee.Salary,
-
             Date=
                 date,
 
             Status=
                 status
         )
+
+        # =================================================
+        # CREATE / SAVE MONTHLY SALARY
+        #
+        # Attendance add karte waqt salary record ensure
+        # hoga.
+        #
+        # Agar same employee + same month ka salary record
+        # already hai to duplicate nahi banega.
+        # =================================================
+
+        try:
+
+            attendance_date = attendance.Date
+
+            month = attendance_date.month
+
+            year = attendance_date.year
+
+        except Exception:
+
+            today = timezone.now().date()
+
+            month = today.month
+
+            year = today.year
+
+        # =================================================
+        # CHECK EXISTING SALARY
+        # =================================================
+
+        salary_record = Employ_Salary.objects.filter(
+
+            EmployId=employee.EmployId,
+
+            Month=month,
+
+            Year=year
+
+        ).first()
+
+        # =================================================
+        # SALARY RECORD DOES NOT EXIST
+        # =================================================
+
+        if not salary_record:
+
+            try:
+
+                monthly_salary = Decimal(
+                    str(employee.Salary)
+                )
+
+            except (
+                InvalidOperation,
+                ValueError,
+                TypeError
+            ):
+
+                monthly_salary = Decimal("0")
+
+            Employ_Salary.objects.create(
+
+                EmployId=
+                    employee.EmployId,
+
+                Employname=
+                    employee.Employname,
+
+                MonthlySalary=
+                    monthly_salary,
+
+                Month=
+                    month,
+
+                Year=
+                    year
+            )
+
+        # =================================================
+        # RESPONSE
+        # =================================================
 
         return JsonResponse({
 
@@ -479,49 +541,33 @@ def Delete_attendance(request, id):
             id=id
         )
 
-        # =================================================
-        # IMPORTANT
-        #
-        # Sirf ye attendance record delete hoga.
-        #
-        # Salary manually delete nahi karni hai.
-        #
-        # Salary API remaining attendance records ko count
-        # karke automatically salary calculate karegi.
-        #
-        # Agar ye employee ki LAST attendance hai,
-        # to Employ_Att me us employee ka koi record
-        # nahi bachega.
-        #
-        # Is case me Salary API us employee ko return
-        # nahi karegi.
-        # =================================================
+        employee_id = attendance.EmployId
 
-        employ_id = attendance.EmployId
+        # =================================================
+        # DELETE ONLY THIS ATTENDANCE
+        #
+        # Salary record delete nahi hoga.
+        # =================================================
 
         attendance.delete()
 
         # =================================================
-        # CHECK REMAINING ATTENDANCE
+        # IMPORTANT
+        #
+        # Agar employee ki koi bhi attendance remaining hai
+        # to salary record definitely rahega.
+        #
+        # Agar employee ki saari attendance delete ho gayi,
+        # tab bhi Monthly Salary record preserve rahega
+        # according to your latest requirement.
         # =================================================
-
-        remaining_attendance = Employ_Att.objects.filter(
-            EmployId=employ_id
-        ).exists()
 
         return JsonResponse({
 
-            "success":
-                True,
+            "success": True,
 
             "message":
-                "Attendance deleted successfully",
-
-            "EmployId":
-                employ_id,
-
-            "remaining_attendance":
-                remaining_attendance
+                "Attendance deleted successfully. Salary record preserved."
         })
 
     return JsonResponse(
@@ -567,9 +613,6 @@ def Edite_attendance(request, id):
 
             "Status":
                 attendance.Status,
-
-            "Salary":
-                attendance.Salary,
         })
 
     # =====================================================
@@ -578,33 +621,101 @@ def Edite_attendance(request, id):
 
     if request.method == "POST":
 
-        # -------------------------------------------------
-        # DATE
-        # -------------------------------------------------
+        old_date = attendance.Date
 
-        attendance.Date = request.POST.get(
+        new_date = request.POST.get(
             "Date"
         )
 
-        # -------------------------------------------------
-        # STATUS
-        # -------------------------------------------------
-
-        attendance.Status = request.POST.get(
+        new_status = request.POST.get(
             "Status"
         )
 
-        # -------------------------------------------------
-        # IMPORTANT
-        #
-        # EmployId, Employname aur Salary change nahi
-        # kar rahe.
-        #
-        # Ye attendance create hone ke time employee se
-        # save ho chuke hain.
-        # -------------------------------------------------
+        # =================================================
+        # CHECK DUPLICATE DATE
+        # =================================================
+
+        duplicate = Employ_Att.objects.filter(
+
+            EmployId=attendance.EmployId,
+
+            Date=new_date
+
+        ).exclude(
+            id=attendance.id
+        ).exists()
+
+        if duplicate:
+
+            return JsonResponse(
+                {
+                    "success": False,
+
+                    "error":
+                        "This employee attendance is already "
+                        "marked for this date."
+                },
+                status=400
+            )
+
+        attendance.Date = new_date
+
+        attendance.Status = new_status
 
         attendance.save()
+
+        # =================================================
+        # SALARY FOR NEW MONTH
+        #
+        # Agar attendance edit karke kisi naye month me gayi
+        # aur us month ka salary record nahi hai,
+        # to create kar denge.
+        # =================================================
+
+        employee = Employ_Data.objects.filter(
+            EmployId=attendance.EmployId
+        ).first()
+
+        if employee:
+
+            try:
+
+                monthly_salary = Decimal(
+                    str(employee.Salary)
+                )
+
+            except (
+                InvalidOperation,
+                ValueError,
+                TypeError
+            ):
+
+                monthly_salary = Decimal("0")
+
+            month = attendance.Date.month
+
+            year = attendance.Date.year
+
+            Employ_Salary.objects.get_or_create(
+
+                EmployId=
+                    employee.EmployId,
+
+                Month=
+                    month,
+
+                Year=
+                    year,
+
+                defaults={
+
+                    "Employname":
+                        employee.Employname,
+
+                    "MonthlySalary":
+                        monthly_salary
+                }
+            )
 
         return JsonResponse({
 
@@ -643,36 +754,27 @@ def Employ_Sallery(request):
         return JsonResponse(
             {
                 "success": False,
-
-                "error":
-                    "Method not allowed"
+                "error": "Method not allowed"
             },
             status=405
         )
 
     # =====================================================
-    # GET UNIQUE EMPLOYEE IDS FROM ATTENDANCE
-    # =====================================================
+    # GET SALARY RECORDS
     #
     # IMPORTANT:
+    # Employ_Data se salary nahi nikalenge.
     #
-    # Yahan Employ_Data use nahi ho raha.
+    # Employ_Salary se nikalenge.
     #
-    # Salary ka source ATTENDANCE hai.
-    #
-    # Jis employee ki attendance hai,
-    # wahi Salary page me dikhega.
-    #
+    # Isliye employee delete hone ke baad bhi salary
+    # page par record rahega.
     # =====================================================
 
-    employ_ids = (
-        Employ_Att.objects
-        .values_list(
-            "EmployId",
-            flat=True
-        )
-        .distinct()
-        .order_by("EmployId")
+    salary_records = Employ_Salary.objects.all().order_by(
+        "EmployId",
+        "Year",
+        "Month"
     )
 
     salary_data = []
@@ -681,43 +783,69 @@ def Employ_Sallery(request):
     # CALCULATE SALARY
     # =====================================================
 
-    for employ_id in employ_ids:
+    for salary_record in salary_records:
 
-        # =================================================
-        # ALL ATTENDANCE OF THIS EMPLOYEE
-        # =================================================
-
-        attendance = Employ_Att.objects.filter(
-
-            EmployId=employ_id
-
-        ).order_by("Date")
-
-        # =================================================
-        # SAFETY CHECK
-        # =================================================
-
-        if not attendance.exists():
-            continue
-
-        # =================================================
-        # FIRST ATTENDANCE
-        # =================================================
+        # -------------------------------------------------
+        # PRESENT COUNT
         #
-        # Employee Employ_Data se delete ho chuka ho,
-        # tab bhi attendance record available hai.
-        #
-        # Isliye name aur salary attendance se lenge.
-        #
-        # =================================================
+        # Sirf same employee + same month + same year
+        # -------------------------------------------------
 
-        first_attendance = attendance.first()
+        present = Employ_Att.objects.filter(
 
-        # =================================================
-        # EMPLOYEE NAME
-        # =================================================
+            EmployId=
+                salary_record.EmployId,
 
-        employ_name = first_attendance.Employname
+            Status=
+                "Present",
+
+            Date__month=
+                salary_record.Month,
+
+            Date__year=
+                salary_record.Year
+
+        ).count()
+
+        # -------------------------------------------------
+        # HALF DAY COUNT
+        # -------------------------------------------------
+
+        half_day = Employ_Att.objects.filter(
+
+            EmployId=
+                salary_record.EmployId,
+
+            Status=
+                "Half Day",
+
+            Date__month=
+                salary_record.Month,
+
+            Date__year=
+                salary_record.Year
+
+        ).count()
+
+        # -------------------------------------------------
+        # ABSENT COUNT
+        # -------------------------------------------------
+
+        absent = Employ_Att.objects.filter(
+
+            EmployId=
+                salary_record.EmployId,
+
+            Status=
+                "Absent",
+
+            Date__month=
+                salary_record.Month,
+
+            Date__year=
+                salary_record.Year
+
+        ).count()
 
         # =================================================
         # MONTHLY SALARY
@@ -725,47 +853,24 @@ def Employ_Sallery(request):
 
         try:
 
-            monthly_salary = float(
-                first_attendance.Salary
+            monthly_salary = Decimal(
+                str(salary_record.MonthlySalary)
             )
 
         except (
+            InvalidOperation,
             ValueError,
             TypeError
         ):
 
-            monthly_salary = 0
-
-        # =================================================
-        # PRESENT COUNT
-        # =================================================
-
-        present = attendance.filter(
-            Status="Present"
-        ).count()
-
-        # =================================================
-        # HALF DAY COUNT
-        # =================================================
-
-        half_day = attendance.filter(
-            Status="Half Day"
-        ).count()
-
-        # =================================================
-        # ABSENT COUNT
-        # =================================================
-
-        absent = attendance.filter(
-            Status="Absent"
-        ).count()
+            monthly_salary = Decimal("0")
 
         # =================================================
         # PER DAY SALARY
         # =================================================
 
         per_day_salary = (
-            monthly_salary / 31
+            monthly_salary / Decimal("31")
         )
 
         # =================================================
@@ -774,31 +879,46 @@ def Employ_Sallery(request):
 
         total_salary = (
 
-            present *
+            Decimal(present)
+            *
             per_day_salary
 
         ) + (
 
-            half_day *
-            0.5 *
+            Decimal(half_day)
+            *
+            Decimal("0.5")
+            *
             per_day_salary
 
         )
 
         # =================================================
-        # ADD SALARY DATA
+        # ADD DATA
         # =================================================
 
         salary_data.append({
 
+            "id":
+                salary_record.id,
+
             "EmployId":
-                employ_id,
+                salary_record.EmployId,
 
             "Employname":
-                employ_name,
+                salary_record.Employname,
 
             "Salary":
-                monthly_salary,
+                float(monthly_salary),
+
+            "MonthlySalary":
+                float(monthly_salary),
+
+            "Month":
+                salary_record.Month,
+
+            "Year":
+                salary_record.Year,
 
             "Present":
                 present,
@@ -810,9 +930,11 @@ def Employ_Sallery(request):
                 absent,
 
             "TotalSalary":
-                round(
-                    total_salary,
-                    2
+                float(
+                    round(
+                        total_salary,
+                        2
+                    )
                 ),
         })
 

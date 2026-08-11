@@ -8,7 +8,7 @@ class Employ_Data(models.Model):
     Employrole=models.CharField(max_length=50000)
     Designation=models.CharField(max_length=50000)
     Experince=models.CharField(max_length=20000)
-    Salary=models.CharField(max_length=2000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)
+    Salary=models.CharField(max_length=90000)
 
     def __str__(self):
         return str(self.EmployId)

@@ -4,11 +4,11 @@ from django.db import models
 class Employ_Data(models.Model):
     EmployId=models.AutoField(primary_key=True)
     Employname=models.CharField(max_length=50000)
-    Address=models.CharField(max_length=200000)
+    Address=models.CharField(max_length=50000)
     Employrole=models.CharField(max_length=50000)
     Designation=models.CharField(max_length=50000)
-    Experince=models.CharField(max_length=20000)
-    Salary=models.CharField(max_length=90000)
+    Experince=models.CharField(max_length=50000)
+    Salary=models.CharField(max_length=50000)
 
     def __str__(self):
         return str(self.EmployId)

@@ -29,9 +29,9 @@ class Employ_Data(models.Model):
 
 class Employ_Att(models.Model):
     EmployId = models.IntegerField()
-    Employname = models.CharField(max_length=50)
+    Employname = models.CharField(max_length=50000)
     Date = models.DateField()
-    Status = models.CharField(max_length=20)
+    Status = models.CharField(max_length=20000)
 
     def __str__(self):
         return f"{self.EmployId} - {self.Employname}"

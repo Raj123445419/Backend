@@ -1,9 +1,7 @@
 from pathlib import Path
-
 import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 SECRET_KEY = 'django-insecure-4%_*w4@r-2ec_a*cyiqx7@lf_ki+243n(sj8&j=w**x31b1@le'
 
@@ -14,7 +12,6 @@ ALLOWED_HOSTS = [
     "localhost",
     "backend-z4sf.onrender.com",
 ]
-
 
 INSTALLED_APPS = [
     'corsheaders',
@@ -28,7 +25,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
-
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -50,9 +46,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-
 ROOT_URLCONF = 'curd_opration.urls'
-
 
 TEMPLATES = [
     {
@@ -72,7 +66,6 @@ TEMPLATES = [
         },
     },
 ]
-
 
 WSGI_APPLICATION = 'curd_opration.wsgi.application'
 
@@ -113,7 +106,6 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

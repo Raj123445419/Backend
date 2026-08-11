@@ -49,15 +49,14 @@ class Employ_Data(models.Model):
         primary_key=True
     )
 
-    Employname = models.TextField() 
-    Address = models.TextField()    
-    Employrole = models.TextField() 
-    Designation = models.TextField()    
-    Experince = models.TextField()  
+    Employname = models.TextField()
+    Address = models.TextField()
+    Employrole = models.TextField()
+    Designation = models.TextField()
+    Experince = models.TextField()
     Salary = models.TextField()
 
     def __str__(self):
-
         return str(self.EmployId)
 
 
@@ -71,12 +70,21 @@ class Employ_Att(models.Model):
         primary_key=True
     )
 
-    EmployId = models.IntegerField()    
+    EmployId = models.IntegerField()
+
     Employname = models.CharField(
         max_length=50000
     )
 
-    Date = models.DateField()   
+    # IMPORTANT:
+    # Employee delete hone ke baad bhi salary calculate
+    # karne ke liye salary Attendance mein save rahegi.
+    Salary = models.TextField(
+        default="0"
+    )
+
+    Date = models.DateField()
+
     Status = models.CharField(
         max_length=20000
     )

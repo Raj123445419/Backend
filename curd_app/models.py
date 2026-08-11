@@ -1,21 +1,31 @@
 from django.db import models
 
 # Create your models here.
+# class Employ_Data(models.Model):
+#     EmployId=models.AutoField(primary_key=True)
+#     Employname=models.CharField(max_length=50000)
+#     Address=models.CharField(max_length=5000)
+#     Employrole=models.CharField(max_length=50000)
+#     Designation=models.CharField(max_length=50000)
+#     Experince=models.CharField(max_length=50000)
+#     Salary=models.CharField(max_length=50000)
+
+#     def __str__(self):
+#         return str(self.EmployId)
+
+
+
 class Employ_Data(models.Model):
-    EmployId=models.AutoField(primary_key=True)
-    Employname=models.CharField(max_length=50000)
-    Address=models.CharField(max_length=50000)
-    Employrole=models.CharField(max_length=50000)
-    Designation=models.CharField(max_length=50000)
-    Experince=models.CharField(max_length=50000)
-    Salary=models.CharField(max_length=50000)
+    EmployId = models.AutoField(primary_key=True)
+    Employname = models.TextField()
+    Address = models.TextField()
+    Employrole = models.TextField()
+    Designation = models.TextField()
+    Experince = models.TextField()
+    Salary = models.TextField()
 
     def __str__(self):
         return str(self.EmployId)
-
-
-
-
 
 class Employ_Att(models.Model):
     EmployId = models.IntegerField()

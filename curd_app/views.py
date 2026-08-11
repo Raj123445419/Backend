@@ -1,4 +1,3 @@
-
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
@@ -13,9 +12,14 @@ from curd_app.models import Employ_Data, Employ_Att
 @csrf_exempt
 def Employ_list(request):
 
+    # -----------------------------------------------------
+    # GET EMPLOYEE LIST
+    # -----------------------------------------------------
+
     if request.method == "GET":
 
-        employees = Employ_Data.objects.all()
+        # Employee ID ke according fixed order
+        employees = Employ_Data.objects.all().order_by("EmployId")
 
         data = []
 
@@ -31,8 +35,10 @@ def Employ_list(request):
                 "Salary": employee.Salary,
             })
 
-        return JsonResponse(data, safe=False)
-
+        return JsonResponse(
+            data,
+            safe=False
+        )
 
     # -----------------------------------------------------
     # ADD EMPLOYEE
@@ -79,7 +85,6 @@ def Employ_list(request):
             "EmployId": employee.EmployId,
         })
 
-
     # -----------------------------------------------------
     # INVALID METHOD
     # -----------------------------------------------------
@@ -114,7 +119,6 @@ def Delete(request, id):
             "message": "Employee deleted successfully"
         })
 
-
     return JsonResponse(
         {
             "success": False,
@@ -135,7 +139,6 @@ def Edite(request, id):
         Employ_Data,
         EmployId=id
     )
-
 
     # -----------------------------------------------------
     # GET EMPLOYEE
@@ -159,7 +162,6 @@ def Edite(request, id):
 
             "Salary": employee.Salary,
         })
-
 
     # -----------------------------------------------------
     # UPDATE EMPLOYEE
@@ -197,6 +199,7 @@ def Edite(request, id):
             ""
         )
 
+        # EmployId change nahi hoga
         employee.save()
 
         return JsonResponse({
@@ -204,6 +207,9 @@ def Edite(request, id):
             "message": "Employee updated successfully"
         })
 
+    # -----------------------------------------------------
+    # INVALID METHOD
+    # -----------------------------------------------------
 
     return JsonResponse(
         {
@@ -227,7 +233,8 @@ def Employ_attendance(request):
 
     if request.method == "GET":
 
-        attendance = Employ_Att.objects.all()
+        # Attendance ID ke according fixed order
+        attendance = Employ_Att.objects.all().order_by("id")
 
         data = []
 
@@ -251,7 +258,6 @@ def Employ_attendance(request):
             safe=False
         )
 
-
     # -----------------------------------------------------
     # ADD ATTENDANCE
     # -----------------------------------------------------
@@ -269,7 +275,6 @@ def Employ_attendance(request):
         status = request.POST.get(
             "Status"
         )
-
 
         # -------------------------------------------------
         # CHECK EMPLOYEE
@@ -291,7 +296,6 @@ def Employ_attendance(request):
                 status=404
             )
 
-
         # -------------------------------------------------
         # CHECK DUPLICATE ATTENDANCE
         # -------------------------------------------------
@@ -304,7 +308,6 @@ def Employ_attendance(request):
 
         ).first()
 
-
         if existing_attendance:
 
             return JsonResponse(
@@ -316,7 +319,6 @@ def Employ_attendance(request):
                 },
                 status=400
             )
-
 
         # -------------------------------------------------
         # CREATE ATTENDANCE
@@ -333,13 +335,11 @@ def Employ_attendance(request):
             Status=status
         )
 
-
         return JsonResponse({
             "success": True,
             "message": "Attendance added successfully",
             "id": attendance.id
         })
-
 
     # -----------------------------------------------------
     # INVALID METHOD
@@ -375,7 +375,6 @@ def Delete_attendance(request, id):
             "message": "Attendance deleted successfully"
         })
 
-
     return JsonResponse(
         {
             "success": False,
@@ -397,7 +396,6 @@ def Edite_attendance(request, id):
         id=id
     )
 
-
     # -----------------------------------------------------
     # GET ATTENDANCE
     # -----------------------------------------------------
@@ -417,7 +415,6 @@ def Edite_attendance(request, id):
             "Status": attendance.Status,
         })
 
-
     # -----------------------------------------------------
     # UPDATE ATTENDANCE
     # -----------------------------------------------------
@@ -432,6 +429,7 @@ def Edite_attendance(request, id):
             "Status"
         )
 
+        # id change nahi hoga
         attendance.save()
 
         return JsonResponse({
@@ -439,6 +437,9 @@ def Edite_attendance(request, id):
             "message": "Attendance updated successfully"
         })
 
+    # -----------------------------------------------------
+    # INVALID METHOD
+    # -----------------------------------------------------
 
     return JsonResponse(
         {
@@ -469,18 +470,16 @@ def Employ_Sallery(request):
             status=405
         )
 
-
-    employees = Employ_Data.objects.all()
+    # Employee ID ke according fixed order
+    employees = Employ_Data.objects.all().order_by("EmployId")
 
     salary_data = []
-
 
     # -----------------------------------------------------
     # CALCULATE SALARY FOR EVERY EMPLOYEE
     # -----------------------------------------------------
 
     for employee in employees:
-
 
         # -------------------------------------------------
         # PRESENT COUNT
@@ -494,7 +493,6 @@ def Employ_Sallery(request):
 
         ).count()
 
-
         # -------------------------------------------------
         # HALF DAY COUNT
         # -------------------------------------------------
@@ -507,7 +505,6 @@ def Employ_Sallery(request):
 
         ).count()
 
-
         # -------------------------------------------------
         # ABSENT COUNT
         # -------------------------------------------------
@@ -519,7 +516,6 @@ def Employ_Sallery(request):
             Status="Absent"
 
         ).count()
-
 
         # -------------------------------------------------
         # MONTHLY SALARY
@@ -538,7 +534,6 @@ def Employ_Sallery(request):
 
             monthly_salary = 0
 
-
         # -------------------------------------------------
         # PER DAY SALARY
         # -------------------------------------------------
@@ -546,7 +541,6 @@ def Employ_Sallery(request):
         per_day_salary = (
             monthly_salary / 31
         )
-
 
         # -------------------------------------------------
         # TOTAL SALARY
@@ -563,7 +557,6 @@ def Employ_Sallery(request):
             * per_day_salary
 
         )
-
 
         # -------------------------------------------------
         # ADD TO RESPONSE
@@ -595,7 +588,6 @@ def Employ_Sallery(request):
                     2
                 ),
         })
-
 
     # -----------------------------------------------------
     # RETURN JSON

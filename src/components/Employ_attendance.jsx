@@ -266,17 +266,7 @@ const Employ_attendance = () => {
 
   };
 
-  // ================= LOADING =================
 
-  if (loading) {
-
-    return (
-      <h3 className="text-center mt-5">
-        Loading...
-      </h3>
-    );
-
-  }
 
   return (
     <>

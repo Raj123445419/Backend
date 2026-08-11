@@ -12,13 +12,13 @@ from curd_app.models import Employ_Data, Employ_Att
 @csrf_exempt
 def Employ_list(request):
 
-    # -----------------------------------------------------
+    # =====================================================
     # GET EMPLOYEE LIST
-    # -----------------------------------------------------
+    # =====================================================
 
     if request.method == "GET":
 
-        # Employee ID ke according fixed order
+        # EmployId ke according fixed order
         employees = Employ_Data.objects.all().order_by("EmployId")
 
         data = []
@@ -26,13 +26,27 @@ def Employ_list(request):
         for employee in employees:
 
             data.append({
-                "EmployId": employee.EmployId,
-                "Employname": employee.Employname,
-                "Address": employee.Address,
-                "Employrole": employee.Employrole,
-                "Designation": employee.Designation,
-                "Experince": employee.Experince,
-                "Salary": employee.Salary,
+
+                "EmployId":
+                    employee.EmployId,
+
+                "Employname":
+                    employee.Employname,
+
+                "Address":
+                    employee.Address,
+
+                "Employrole":
+                    employee.Employrole,
+
+                "Designation":
+                    employee.Designation,
+
+                "Experince":
+                    employee.Experince,
+
+                "Salary":
+                    employee.Salary,
             })
 
         return JsonResponse(
@@ -40,9 +54,9 @@ def Employ_list(request):
             safe=False
         )
 
-    # -----------------------------------------------------
+    # =====================================================
     # ADD EMPLOYEE
-    # -----------------------------------------------------
+    # =====================================================
 
     if request.method == "POST":
 
@@ -80,14 +94,19 @@ def Employ_list(request):
         )
 
         return JsonResponse({
+
             "success": True,
-            "message": "Employee added successfully",
-            "EmployId": employee.EmployId,
+
+            "message":
+                "Employee added successfully",
+
+            "EmployId":
+                employee.EmployId,
         })
 
-    # -----------------------------------------------------
+    # =====================================================
     # INVALID METHOD
-    # -----------------------------------------------------
+    # =====================================================
 
     return JsonResponse(
         {
@@ -115,8 +134,11 @@ def Delete(request, id):
         employee.delete()
 
         return JsonResponse({
+
             "success": True,
-            "message": "Employee deleted successfully"
+
+            "message":
+                "Employee deleted successfully"
         })
 
     return JsonResponse(
@@ -140,39 +162,56 @@ def Edite(request, id):
         EmployId=id
     )
 
-    # -----------------------------------------------------
+    # =====================================================
     # GET EMPLOYEE
-    # -----------------------------------------------------
+    # =====================================================
 
     if request.method == "GET":
 
         return JsonResponse({
 
-            "EmployId": employee.EmployId,
+            "EmployId":
+                employee.EmployId,
 
-            "Employname": employee.Employname,
+            "Employname":
+                employee.Employname,
 
-            "Address": employee.Address,
+            "Address":
+                employee.Address,
 
-            "Employrole": employee.Employrole,
+            "Employrole":
+                employee.Employrole,
 
-            "Designation": employee.Designation,
+            "Designation":
+                employee.Designation,
 
-            "Experince": employee.Experince,
+            "Experince":
+                employee.Experince,
 
-            "Salary": employee.Salary,
+            "Salary":
+                employee.Salary,
         })
 
-    # -----------------------------------------------------
+    # =====================================================
     # UPDATE EMPLOYEE
-    # -----------------------------------------------------
+    # =====================================================
 
     if request.method == "POST":
 
-        employee.Employname = request.POST.get(
+        # -------------------------------------------------
+        # NEW EMPLOYEE NAME
+        # -------------------------------------------------
+
+        new_name = request.POST.get(
             "Employname",
             ""
         )
+
+        # -------------------------------------------------
+        # UPDATE EMPLOYEE DATA
+        # -------------------------------------------------
+
+        employee.Employname = new_name
 
         employee.Address = request.POST.get(
             "Address",
@@ -199,17 +238,53 @@ def Edite(request, id):
             ""
         )
 
-        # EmployId change nahi hoga
+        # -------------------------------------------------
+        # SAVE EMPLOYEE
+        # -------------------------------------------------
+
         employee.save()
 
+        # =================================================
+        # IMPORTANT
+        # =================================================
+        #
+        # Same EmployId wali ALL attendance entries me
+        # employee ka new name update hoga.
+        #
+        # Example:
+        #
+        # Employee ID = 5
+        #
+        # Attendance:
+        # 5 - Rahul - 01/08/2026
+        # 5 - Rahul - 02/08/2026
+        # 5 - Rahul - 03/08/2026
+        #
+        # Rahul ko Harsh karne par:
+        #
+        # 5 - Harsh - 01/08/2026
+        # 5 - Harsh - 02/08/2026
+        # 5 - Harsh - 03/08/2026
+        #
+        # =================================================
+
+        Employ_Att.objects.filter(
+            EmployId=employee.EmployId
+        ).update(
+            Employname=new_name
+        )
+
         return JsonResponse({
+
             "success": True,
-            "message": "Employee updated successfully"
+
+            "message":
+                "Employee and attendance records updated successfully"
         })
 
-    # -----------------------------------------------------
+    # =====================================================
     # INVALID METHOD
-    # -----------------------------------------------------
+    # =====================================================
 
     return JsonResponse(
         {
@@ -227,9 +302,9 @@ def Edite(request, id):
 @csrf_exempt
 def Employ_attendance(request):
 
-    # -----------------------------------------------------
+    # =====================================================
     # GET ATTENDANCE
-    # -----------------------------------------------------
+    # =====================================================
 
     if request.method == "GET":
 
@@ -242,15 +317,20 @@ def Employ_attendance(request):
 
             data.append({
 
-                "id": item.id,
+                "id":
+                    item.id,
 
-                "EmployId": item.EmployId,
+                "EmployId":
+                    item.EmployId,
 
-                "Employname": item.Employname,
+                "Employname":
+                    item.Employname,
 
-                "Date": str(item.Date),
+                "Date":
+                    str(item.Date),
 
-                "Status": item.Status,
+                "Status":
+                    item.Status,
             })
 
         return JsonResponse(
@@ -258,9 +338,9 @@ def Employ_attendance(request):
             safe=False
         )
 
-    # -----------------------------------------------------
+    # =====================================================
     # ADD ATTENDANCE
-    # -----------------------------------------------------
+    # =====================================================
 
     if request.method == "POST":
 
@@ -276,9 +356,9 @@ def Employ_attendance(request):
             "Status"
         )
 
-        # -------------------------------------------------
+        # =================================================
         # CHECK EMPLOYEE
-        # -------------------------------------------------
+        # =================================================
 
         try:
 
@@ -291,14 +371,15 @@ def Employ_attendance(request):
             return JsonResponse(
                 {
                     "success": False,
-                    "error": "Employee ID not found."
+                    "error":
+                        "Employee ID not found."
                 },
                 status=404
             )
 
-        # -------------------------------------------------
+        # =================================================
         # CHECK DUPLICATE ATTENDANCE
-        # -------------------------------------------------
+        # =================================================
 
         existing_attendance = Employ_Att.objects.filter(
 
@@ -313,6 +394,7 @@ def Employ_attendance(request):
             return JsonResponse(
                 {
                     "success": False,
+
                     "error":
                         "This employee attendance is already "
                         "marked for this date."
@@ -320,30 +402,40 @@ def Employ_attendance(request):
                 status=400
             )
 
-        # -------------------------------------------------
+        # =================================================
         # CREATE ATTENDANCE
-        # -------------------------------------------------
+        # =================================================
 
         attendance = Employ_Att.objects.create(
 
-            EmployId=employee.EmployId,
+            EmployId=
+                employee.EmployId,
 
-            Employname=employee.Employname,
+            Employname=
+                employee.Employname,
 
-            Date=date,
+            Date=
+                date,
 
-            Status=status
+            Status=
+                status
         )
 
         return JsonResponse({
-            "success": True,
-            "message": "Attendance added successfully",
-            "id": attendance.id
+
+            "success":
+                True,
+
+            "message":
+                "Attendance added successfully",
+
+            "id":
+                attendance.id
         })
 
-    # -----------------------------------------------------
+    # =====================================================
     # INVALID METHOD
-    # -----------------------------------------------------
+    # =====================================================
 
     return JsonResponse(
         {
@@ -371,8 +463,11 @@ def Delete_attendance(request, id):
         attendance.delete()
 
         return JsonResponse({
+
             "success": True,
-            "message": "Attendance deleted successfully"
+
+            "message":
+                "Attendance deleted successfully"
         })
 
     return JsonResponse(
@@ -396,28 +491,33 @@ def Edite_attendance(request, id):
         id=id
     )
 
-    # -----------------------------------------------------
+    # =====================================================
     # GET ATTENDANCE
-    # -----------------------------------------------------
+    # =====================================================
 
     if request.method == "GET":
 
         return JsonResponse({
 
-            "id": attendance.id,
+            "id":
+                attendance.id,
 
-            "EmployId": attendance.EmployId,
+            "EmployId":
+                attendance.EmployId,
 
-            "Employname": attendance.Employname,
+            "Employname":
+                attendance.Employname,
 
-            "Date": str(attendance.Date),
+            "Date":
+                str(attendance.Date),
 
-            "Status": attendance.Status,
+            "Status":
+                attendance.Status,
         })
 
-    # -----------------------------------------------------
+    # =====================================================
     # UPDATE ATTENDANCE
-    # -----------------------------------------------------
+    # =====================================================
 
     if request.method == "POST":
 
@@ -429,17 +529,24 @@ def Edite_attendance(request, id):
             "Status"
         )
 
-        # id change nahi hoga
+        # -------------------------------------------------
+        # Employee ID aur name change nahi kar rahe.
+        # -------------------------------------------------
+
         attendance.save()
 
         return JsonResponse({
-            "success": True,
-            "message": "Attendance updated successfully"
+
+            "success":
+                True,
+
+            "message":
+                "Attendance updated successfully"
         })
 
-    # -----------------------------------------------------
+    # =====================================================
     # INVALID METHOD
-    # -----------------------------------------------------
+    # =====================================================
 
     return JsonResponse(
         {
@@ -456,9 +563,9 @@ def Edite_attendance(request, id):
 
 def Employ_Sallery(request):
 
-    # -----------------------------------------------------
+    # =====================================================
     # ONLY GET ALLOWED
-    # -----------------------------------------------------
+    # =====================================================
 
     if request.method != "GET":
 
@@ -470,14 +577,19 @@ def Employ_Sallery(request):
             status=405
         )
 
-    # Employee ID ke according fixed order
-    employees = Employ_Data.objects.all().order_by("EmployId")
+    # =====================================================
+    # EMPLOYEE LIST
+    # =====================================================
+
+    employees = Employ_Data.objects.all().order_by(
+        "EmployId"
+    )
 
     salary_data = []
 
-    # -----------------------------------------------------
-    # CALCULATE SALARY FOR EVERY EMPLOYEE
-    # -----------------------------------------------------
+    # =====================================================
+    # CALCULATE SALARY
+    # =====================================================
 
     for employee in employees:
 
@@ -487,9 +599,11 @@ def Employ_Sallery(request):
 
         present = Employ_Att.objects.filter(
 
-            EmployId=employee.EmployId,
+            EmployId=
+                employee.EmployId,
 
-            Status="Present"
+            Status=
+                "Present"
 
         ).count()
 
@@ -499,9 +613,11 @@ def Employ_Sallery(request):
 
         half_day = Employ_Att.objects.filter(
 
-            EmployId=employee.EmployId,
+            EmployId=
+                employee.EmployId,
 
-            Status="Half Day"
+            Status=
+                "Half Day"
 
         ).count()
 
@@ -511,15 +627,17 @@ def Employ_Sallery(request):
 
         absent = Employ_Att.objects.filter(
 
-            EmployId=employee.EmployId,
+            EmployId=
+                employee.EmployId,
 
-            Status="Absent"
+            Status=
+                "Absent"
 
         ).count()
 
-        # -------------------------------------------------
+        # =================================================
         # MONTHLY SALARY
-        # -------------------------------------------------
+        # =================================================
 
         try:
 
@@ -534,33 +652,34 @@ def Employ_Sallery(request):
 
             monthly_salary = 0
 
-        # -------------------------------------------------
+        # =================================================
         # PER DAY SALARY
-        # -------------------------------------------------
+        # =================================================
 
         per_day_salary = (
             monthly_salary / 31
         )
 
-        # -------------------------------------------------
+        # =================================================
         # TOTAL SALARY
-        # -------------------------------------------------
+        # =================================================
 
         total_salary = (
 
-            present * per_day_salary
+            present *
+            per_day_salary
 
         ) + (
 
-            half_day
-            * 0.5
-            * per_day_salary
+            half_day *
+            0.5 *
+            per_day_salary
 
         )
 
-        # -------------------------------------------------
-        # ADD TO RESPONSE
-        # -------------------------------------------------
+        # =================================================
+        # ADD DATA
+        # =================================================
 
         salary_data.append({
 
@@ -589,9 +708,9 @@ def Employ_Sallery(request):
                 ),
         })
 
-    # -----------------------------------------------------
+    # =====================================================
     # RETURN JSON
-    # -----------------------------------------------------
+    # =====================================================
 
     return JsonResponse(
         salary_data,

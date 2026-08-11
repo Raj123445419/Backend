@@ -1,0 +1,531 @@
+<!-- {% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Employ Management System </title>
+
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" 
+integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+ integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
+</script>
+
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Edu+VIC+WA+NT+Hand:wght@400..700&display=swap" rel="stylesheet">
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+
+
+
+
+
+
+
+
+<style>
+
+
+
+.all{
+  background-color: #1F2937;
+  font-family: "Edu VIC WA NT Hand", cursive;
+  font-size: 15px;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.fontnav {
+  font-family: "Edu VIC WA NT Hand", cursive;
+  font-size: 15px;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.cl1 {
+color: white;
+}
+
+.cl1:hover {
+    color: #38BDF8;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.add {
+    background-color:#22C55E ;
+    color: #FFFFFF;
+    font-family: "Noto Serif", serif;  
+        height: 40px;
+    width: 150px;
+    margin-top: 10px;  
+}
+
+
+.add:hover {
+    background-color: #198754;
+    color:#FDE047 ;
+}
+
+
+
+
+.alltext {
+  font-family: "Spectral", serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.fonsize {
+    font-size: 20px;
+}
+
+.form {
+height: 35px;
+width: 40%;
+
+border-radius: 10px;
+margin-top: 10px;
+}
+
+
+
+.btn-edit {
+  color: #1d4ed8;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+}
+
+.btn-edit:hover {
+  color: #ffffff;
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+
+.btn-delete {
+  color: #dc2626;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+.btn-delete:hover {
+  color: #ffffff;
+  background-color: #dc2626;
+  border-color: #dc2626;
+}
+
+
+.employee-table-box { 
+  width: 100%;
+   max-width: 100%; 
+   overflow: hidden;
+   }
+
+
+ .employee-table { 
+  width: 100%; 
+  table-layout: fixed;
+   margin-bottom: 0;
+   }
+
+
+
+  .employee-table th, .employee-table td {
+     max-width: 180px;
+      overflow: hidden;
+     } 
+
+
+
+   .cell-scroll { 
+    width: 100%; 
+    max-width: 180px; 
+    overflow-x: auto;
+     overflow-y: hidden;
+      white-space: nowrap;
+       scrollbar-width: thin;
+       } 
+
+
+
+   .cell-scroll::-webkit-scrollbar {
+     height: 5px;
+     } 
+     .cell-scroll::-webkit-scrollbar-thumb {
+       border-radius: 10px;
+       } 
+
+
+
+   .employee-table td:last-child, .employee-table td:nth-last-child(2) { 
+    width: 80px;
+     max-width: 80px; 
+    }
+
+
+
+     @media (max-width: 768px) { 
+      .employee-table { 
+        font-size: 13px; 
+      } 
+      .employee-table th, .employee-table td {
+         padding: 8px 6px;
+         } 
+      .cell-scroll {
+         max-width: 100px;
+         } 
+         .employee-table td:last-child, .employee-table td:nth-last-child(2){ 
+          width: 65px; 
+          max-width: 65px;
+         } 
+         .btn-sm { 
+          font-size: 11px; 
+          padding: 4px 7px;
+         } 
+        
+        }
+
+
+
+ @media (max-width: 480px) {
+  .employee-table {
+     font-size: 12px; 
+    } 
+        .employee-table th, .employee-table td { 
+          padding: 6px 4px;
+         } 
+         .cell-scroll { 
+          max-width: 75px;
+         } 
+        .employee-table td:last-child, .employee-table td:nth-last-child(2) { 
+          width: 58px; 
+          max-width: 58px; 
+        }
+         .btn-sm { 
+          font-size: 10px;
+           padding: 3px 5px;
+           } 
+          
+          } -->
+
+
+
+
+/* agar scorrl ke baja ye text size hi small kar nni ho to */
+
+/* .cell-scroll {
+    white-space: nowrap;
+    overflow: hidden;
+}  */
+
+
+
+/* 
+
+
+
+
+
+
+
+
+
+
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body>
+
+    
+<header>
+
+<div class="all">
+<nav class="navbar navbar-expand-sm">
+  <div class="container-fluid">
+    <a class="navbar-brand fontnav px-2 px-md-3 cl1" href="{% url 'Employ_list' %}"  > Employ Management System </a>
+    <button class="navbar-toggler" style="background-color: #018c8c90;color: #FFFFFF;" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+
+
+<div class="collapse navbar-collapse" style="justify-content: end;" id="collapsibleNavbar">
+  <ul class="navbar-nav">
+    <li class="nav-item">
+      <a class="nav-link px-2 px-md-3 cl1" href="{% url 'Employ_list' %}" >Employ List</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link px-2 px-md-3 cl1" href="{% url 'Employ_attendance' %}">Employ Attendance</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link px-2 px-md-3 cl1" href="{% url 'Employ_Sallery' %}">Employ Sallery Count</a>
+    </li>
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+</div>
+
+
+</header> */
+
+<!-- Add Button -->
+<!-- 
+<div class="col-md-12 d-flex justify-content-end p-2">
+
+
+
+<button class="btn add" data-bs-toggle="modal" data-bs-target="#myModal" >
+    + Add Employ
+</button>
+</div>
+
+
+<main>
+
+
+<div class="col-md-12 ">
+<center>
+<h1 class="alltext">
+Employ Details    
+</h1>
+</center>
+</div>    
+
+<div class="employee-table-box">
+<table class="table table-bordered table-hover align-middle employee-table"> 
+    <thead class="table-dark text-center alltext"> 
+
+      <tr>
+
+         <th>Employ Id</th>
+          <th>Employ Name</th> 
+        <th>Address</th>
+         <th>Employ Role</th>
+         <th>Designation</th> 
+         <th>Experience</th>
+          <th>Salary</th> 
+          <th colspan="2">Manage</th>
+         </tr> 
+        
+        
+        </thead>
+         <tbody>
+           {% for i in data %}
+            <tr>
+           <td>{{ i.EmployId }}</td>
+            <td>
+               <div class="cell-scroll"> {{ i.Employname }} </div>
+            </td>
+             <td>
+               <div class="cell-scroll"> {{ i.Address }} </div> 
+            </td> 
+            <td> 
+              <div class="cell-scroll"> {{ i.Employrole }} </div> 
+            </td> 
+            <td> <div class="cell-scroll"> {{ i.Designation }} </div>
+             </td>
+              <td> <div class="cell-scroll"> {{ i.Experince }} </div> 
+            </td> 
+            <td> <div class="cell-scroll"> {{ i.Salary }} </div>
+             </td>
+             <td class="text-center"> 
+              <a href="{% url 'Edite' i.EmployId %}" class="btn btn-edit btn-sm"> Edit </a> 
+            </td> 
+             <td class="text-center"> 
+              <a href="{% url 'Delete' i.EmployId %}" class="btn btn-delete btn-sm"> Delete </a>
+             </td>
+             </tr>
+             
+             {% endfor %} 
+            
+            
+            
+            
+            </tbody> 
+           </table> 
+          </div>
+
+
+
+
+
+
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-fullscreen-sm-down">
+    <div class="modal-content border-0 shadow">
+
+
+      <div class="modal-header bg-light">
+        <h5 class="modal-title fw-bold text-primary" id="myModalLabel">Employee Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+
+      <div class="modal-body p-4">
+        <form action="{% url 'Employ_list' %}" form="employeeForm" method="POST">
+            {% csrf_token %}
+          
+          <div class="row g-3">
+            <div class="col-12">
+              <label for="empName" class="form-label fw-semibold">Employ Name</label>
+              <input type="text" name="Employname" class="form-control" id="empName" placeholder="Full Name" required>
+            </div>
+
+
+            <div class="col-12">
+              <label for="empAddress" class="form-label fw-semibold">Address</label>
+              <textarea class="form-control" name="Address" id="empAddress" rows="3" placeholder="Enter complete address" required></textarea>
+            </div>
+
+
+            <div class="col-12 col-md-6">
+              <label for="empRole" class="form-label fw-semibold">Employ Role</label>
+              <input type="text" name="Employrole" class="form-control" id="empRole" placeholder="Employee Role" required> 
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label for="empDesignation" class="form-label fw-semibold">Designation</label>
+              <input type="text" name="Designation" class="form-control" id="empDesignation" placeholder="Designation" required>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label for="department" class="form-label fw-semibold">Experince</label>
+              <input type="text" name="Experince" class="form-control" id="department" placeholder="Experince" required>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label for="joiningDate" class="form-label fw-semibold">Salary</label>
+              <input type="number" name="Salary" class="form-control" id="joiningDate" required> 
+            </div>
+          </div>
+
+        
+      </div>
+
+
+      <div class="modal-footer bg-light">
+        <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Close</button>
+        <button type="submit"  class="btn btn-primary px-4">Save Details</button>
+      </div>
+</form>
+    </div>
+  </div>
+</div>
+
+
+
+
+</main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body> -->
+
+
+<!-- <script>
+function resizeText() {
+
+    document.querySelectorAll('.cell-scroll').forEach(function(text) {
+
+        let size = 14;
+
+        text.style.fontSize = size + "px";
+
+        while (text.scrollWidth > text.clientWidth && size > 4) {
+            size--;
+            text.style.fontSize = size + "px";
+        }
+
+    });
+
+}
+
+window.addEventListener("load", resizeText);
+window.addEventListener("resize", resizeText);
+</script> -->
+
+
+<!-- </html> -->

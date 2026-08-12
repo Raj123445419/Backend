@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
-
+from datetime import datetime, date
 
 from curd_app.models import (
     Employ_Data,
@@ -18,22 +18,16 @@ from decimal import Decimal, InvalidOperation
 # =========================================================
 
 def safe_salary(value):
-
     try:
-
         value = str(value).strip()
-
         if not value:
             return Decimal("0")
-
         return Decimal(value)
-
     except (
         InvalidOperation,
         ValueError,
         TypeError
     ):
-
         return Decimal("0")
 
 
@@ -49,7 +43,6 @@ def Employ_list(request):
     # =====================================================
 
     if request.method == "GET":
-
         employees = Employ_Data.objects.all().order_by(
             "EmployId"
         )
@@ -57,27 +50,19 @@ def Employ_list(request):
         data = []
 
         for employee in employees:
-
             data.append({
-
                 "EmployId":
                     employee.EmployId,
-
                 "Employname":
                     employee.Employname,
-
                 "Address":
                     employee.Address,
-
                 "Employrole":
                     employee.Employrole,
-
                 "Designation":
                     employee.Designation,
-
                 "Experince":
                     employee.Experince,
-
                 "Salary":
                     employee.Salary,
             })
@@ -92,34 +77,27 @@ def Employ_list(request):
     # =====================================================
 
     if request.method == "POST":
-
         employee = Employ_Data.objects.create(
-
             Employname=request.POST.get(
                 "Employname",
                 ""
             ),
-
             Address=request.POST.get(
                 "Address",
                 ""
             ),
-
             Employrole=request.POST.get(
                 "Employrole",
                 ""
             ),
-
             Designation=request.POST.get(
                 "Designation",
                 ""
             ),
-
             Experince=request.POST.get(
                 "Experince",
                 ""
             ),
-
             Salary=request.POST.get(
                 "Salary",
                 ""
@@ -127,12 +105,9 @@ def Employ_list(request):
         )
 
         return JsonResponse({
-
             "success": True,
-
             "message":
                 "Employee added successfully",
-
             "EmployId":
                 employee.EmployId,
         })
@@ -165,8 +140,8 @@ def Delete(request, id):
         )
 
         # -------------------------------------------------
-        # Employee delete hone par salary record delete
-        # nahi hoga.
+        # Employee delete hone par salary record delete 
+        # nahi hoga, aur last salary preserve rahegi (0 nahi hogi).
         # -------------------------------------------------
 
         employee.delete()
@@ -268,11 +243,6 @@ def Edite(request, id):
             ""
         )
 
-        # -------------------------------------------------
-        # Salary ko TextField me hi save kar rahe hain.
-        # Isliye koi fixed numeric limit nahi.
-        # -------------------------------------------------
-
         employee.Salary = new_salary
 
         employee.save()
@@ -288,19 +258,22 @@ def Edite(request, id):
         )
 
         # =================================================
-        # IMPORTANT
-        #
-        # Existing salary record ki MonthlySalary ko
-        # yahan change nahi karenge.
-        #
-        # Kyunki old month ka salary record preserve
-        # rehna chahiye.
+        # UPDATE SALARY RECORD (CURRENT/ACTIVE MONTH)
+        # 
+        # Employee list me salary change karne par current month 
+        # ke salary record me bhi salary update ho jayegi.
         # =================================================
 
+        current_month = date.today().month
+        current_year = date.today().year
+
         Employ_Salary.objects.filter(
-            EmployId=employee.EmployId
+            EmployId=employee.EmployId,
+            Month=current_month,
+            Year=current_year
         ).update(
-            Employname=new_name
+            Employname=new_name,
+            MonthlySalary=new_salary
         )
 
         return JsonResponse({
@@ -378,7 +351,7 @@ def Employ_attendance(request):
             "EmployId"
         )
 
-        date = request.POST.get(
+        date_val = request.POST.get(
             "Date"
         )
 
@@ -415,7 +388,7 @@ def Employ_attendance(request):
 
             EmployId=employee.EmployId,
 
-            Date=date
+            Date=date_val
 
         ).first()
 
@@ -445,7 +418,7 @@ def Employ_attendance(request):
                 employee.Employname,
 
             Date=
-                date,
+                date_val,
 
             Status=
                 status
@@ -453,12 +426,6 @@ def Employ_attendance(request):
 
         # =================================================
         # CREATE MONTHLY SALARY RECORD
-        #
-        # Pehli attendance par current attendance ke
-        # month/year ka salary record create hoga.
-        #
-        # Same month me dusri attendance par duplicate
-        # salary record nahi banega.
         # =================================================
 
         month = attendance.Date.month
@@ -548,9 +515,6 @@ def Delete_attendance(request, id):
 
         # =================================================
         # CHECK REMAINING ATTENDANCE
-        #
-        # Agar is employee ki isi month/year me ek bhi
-        # attendance nahi bachi, to salary record delete.
         # =================================================
 
         remaining_attendance = Employ_Att.objects.filter(
@@ -639,7 +603,6 @@ def Edite_attendance(request, id):
         attendance.Status = new_status
         attendance.save()
 
-        # Date string ko safely parse karne ke liye taaki 500 error na aaye
         if isinstance(attendance.Date, str):
             parsed_date = datetime.strptime(attendance.Date, "%Y-%m-%d").date()
         else:
@@ -691,10 +654,6 @@ def Edite_attendance(request, id):
             "message": "Attendance updated successfully"
         })
 
-    # =====================================================
-    # INVALID METHOD
-    # =====================================================
-
     return JsonResponse(
         {
             "success": False,
@@ -704,14 +663,13 @@ def Edite_attendance(request, id):
     )
 
 
-
+# =========================================================
+# EMPLOYEE SALARY VIEW
+# =========================================================
 
 def Employ_Sallery(request):
 
-
-
     if request.method != "GET":
-
         return JsonResponse(
             {
                 "success": False,
@@ -720,161 +678,91 @@ def Employ_Sallery(request):
             status=405
         )
 
-
-
     salary_records = Employ_Salary.objects.all().order_by(
-
         "EmployId",
-
         "Year",
-
         "Month"
     )
 
     salary_data = []
 
-    
-
     for salary_record in salary_records:
 
-
         present = Employ_Att.objects.filter(
-
             EmployId=
                 salary_record.EmployId,
-
             Status=
                 "Present",
-
             Date__month=
                 salary_record.Month,
-
             Date__year=
                 salary_record.Year
-
         ).count()
-
-        # -------------------------------------------------
-        # HALF DAY
-        # -------------------------------------------------
 
         half_day = Employ_Att.objects.filter(
-
             EmployId=
                 salary_record.EmployId,
-
             Status=
                 "Half Day",
-
             Date__month=
                 salary_record.Month,
-
             Date__year=
                 salary_record.Year
-
         ).count()
-
-        # -------------------------------------------------
-        # ABSENT
-        # -------------------------------------------------
 
         absent = Employ_Att.objects.filter(
-
             EmployId=
                 salary_record.EmployId,
-
             Status=
                 "Absent",
-
             Date__month=
                 salary_record.Month,
-
             Date__year=
                 salary_record.Year
-
         ).count()
-
-        # =================================================
-        # MONTHLY SALARY
-        #
-        # IMPORTANT:
-        # safe_salary use kar rahe hain.
-        # =================================================
 
         monthly_salary = safe_salary(
             salary_record.MonthlySalary
         )
-
-        # =================================================
-        # PER DAY SALARY
-        # =================================================
 
         per_day_salary = (
             monthly_salary /
             Decimal("31")
         )
 
-        # =================================================
-        # TOTAL SALARY
-        # =================================================
-
         total_salary = (
-
             Decimal(present)
             *
             per_day_salary
-
         ) + (
-
             Decimal(half_day)
             *
             Decimal("0.5")
             *
             per_day_salary
-
         )
 
-        # =================================================
-        # ADD DATA
-        #
-        # IMPORTANT:
-        # float() bilkul nahi use karna.
-        #
-        # Isse extremely large salary bhi safe rahegi.
-        # =================================================
-
         salary_data.append({
-
             "id":
                 salary_record.id,
-
             "EmployId":
                 salary_record.EmployId,
-
             "Employname":
                 salary_record.Employname,
-
             "Salary":
                 str(monthly_salary),
-
             "MonthlySalary":
                 str(monthly_salary),
-
             "Month":
                 salary_record.Month,
-
             "Year":
                 salary_record.Year,
-
             "Present":
                 present,
-
             "HalfDay":
                 half_day,
-
             "Absent":
                 absent,
-
             "TotalSalary":
                 str(
                     round(
@@ -884,25 +772,15 @@ def Employ_Sallery(request):
                 ),
         })
 
-    # =====================================================
-    # RETURN JSON
-    # =====================================================
-
     return JsonResponse(
         salary_data,
         safe=False
     )
 
 
-
-
-
-
-
-
-
-
-from datetime import datetime
+# =========================================================
+# MARK ATTENDANCE VIA QR
+# =========================================================
 
 def mark_attendance_via_qr(request):
     employ_id = request.GET.get("EmployId")
@@ -917,13 +795,11 @@ def mark_attendance_via_qr(request):
     except Employ_Data.DoesNotExist:
         return HttpResponse("<h2 style='color:red; text-align:center; margin-top:50px;'>Employee Not Found!</h2>")
 
-    # YAHAN CHANGE KIYA HAI: String date ko proper Date object me badla hai
     try:
         date_obj = datetime.strptime(date_str, "%Y-%m-%d").date()
     except ValueError:
         return HttpResponse("<h2 style='color:red; text-align:center; margin-top:50px;'>Invalid Date Format!</h2>")
 
-    # Check karein ki kya aaj ki attendance pehle se saved hai
     already_marked = Employ_Att.objects.filter(EmployId=employ_id, Date=date_obj).exists()
 
     if not already_marked:
@@ -934,7 +810,6 @@ def mark_attendance_via_qr(request):
             Status="Present"
         )
 
-        # Ab yahan date_obj se safely month aur year mil jayega
         month = date_obj.month
         year = date_obj.year
 

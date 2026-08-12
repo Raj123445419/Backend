@@ -1002,11 +1002,13 @@ def Employ_Sallery(request):
 
 
 
+from datetime import datetime
+
 def mark_attendance_via_qr(request):
     employ_id = request.GET.get("EmployId")
-    date = request.GET.get("Date")
+    date_str = request.GET.get("Date")
     
-    if not employ_id or not date:
+    if not employ_id or not date_str:
         return HttpResponse("<h2 style='color:red; text-align:center; margin-top:50px;'>Invalid QR Code Data!</h2>")
 
     try:
@@ -1015,20 +1017,26 @@ def mark_attendance_via_qr(request):
     except Employ_Data.DoesNotExist:
         return HttpResponse("<h2 style='color:red; text-align:center; margin-top:50px;'>Employee Not Found!</h2>")
 
+    # YAHAN CHANGE KIYA HAI: String date ko proper Date object me badla hai
+    try:
+        date_obj = datetime.strptime(date_str, "%Y-%m-%d").date()
+    except ValueError:
+        return HttpResponse("<h2 style='color:red; text-align:center; margin-top:50px;'>Invalid Date Format!</h2>")
+
     # Check karein ki kya aaj ki attendance pehle se saved hai
-    already_marked = Employ_Att.objects.filter(EmployId=employ_id, Date=date).exists()
+    already_marked = Employ_Att.objects.filter(EmployId=employ_id, Date=date_obj).exists()
 
     if not already_marked:
         attendance = Employ_Att.objects.create(
             EmployId=employ_id,
             Employname=employ_name,
-            Date=date,
+            Date=date_obj,
             Status="Present"
         )
 
-        # Salary record create karne ka logic (Taaki salary page par count aaye)
-        month = attendance.Date.month
-        year = attendance.Date.year
+        # Ab yahan date_obj se safely month aur year mil jayega
+        month = date_obj.month
+        year = date_obj.year
 
         salary_record = Employ_Salary.objects.filter(
             EmployId=employee.EmployId,

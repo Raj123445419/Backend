@@ -12,74 +12,45 @@ urlpatterns = [
     # =====================================================
 
     path(
-        "admin/",
-        admin.site.urls
+        "admin/",admin.site.urls
     ),
 
-
-    # =====================================================
-    # EMPLOYEE
-    # =====================================================
-
-    # GET  -> Employee list
-    # POST -> Add employee
     path(
         "",
-        views.Employ_list,
-        name="Employ_list"
+        views.Employ_list,name="Employ_list"
     ),
 
-    # DELETE employee
+
     path(
-        "Delete/<int:id>/",
-        views.Delete,
-        name="Delete"
+        "Delete/<int:id>/",views.Delete,name="Delete"
     ),
 
-    # GET / POST employee edit
+
     path(
-        "Edite/<int:id>/",
-        views.Edite,
-        name="Edite"
+        "Edite/<int:id>/",views.Edite,name="Edite"
     ),
 
 
-    # =====================================================
-    # ATTENDANCE
-    # =====================================================
-
-    # GET  -> Attendance list
-    # POST -> Add attendance
     path(
-        "Employ_attendance/",
-        views.Employ_attendance,
-        name="Employ_attendance"
+        "Employ_attendance/",views.Employ_attendance,name="Employ_attendance"
     ),
 
-    # DELETE attendance
+
     path(
-        "Delete_attendance/<int:id>/",
-        views.Delete_attendance,
-        name="Delete_attendance"
+        "Delete_attendance/<int:id>/",views.Delete_attendance,name="Delete_attendance"
     ),
 
-    # GET / POST attendance edit
+
     path(
-        "Edite_attendance/<int:id>/",
-        views.Edite_attendance,
-        name="Edite_attendance"
+        "Edite_attendance/<int:id>/",views.Edite_attendance,name="Edite_attendance"
     ),
 
 
-    # =====================================================
-    # SALARY
-    # =====================================================
-
-    # GET -> Salary calculation
     path(
-        "Employ_Sallery/",
-        views.Employ_Sallery,
-        name="Employ_Sallery"
+        "Employ_Sallery/",views.Employ_Sallery,name="Employ_Sallery"
     ),
+
+path('mark-attendance/', views.mark_attendance_via_qr, name='mark_attendance'),
+
 ]
 

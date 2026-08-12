@@ -259,9 +259,6 @@ def Edite(request, id):
 
         # =================================================
         # UPDATE SALARY RECORD (CURRENT/ACTIVE MONTH)
-        # 
-        # Employee list me salary change karne par current month 
-        # ke salary record me bhi salary update ho jayegi.
         # =================================================
 
         current_month = date.today().month
@@ -720,6 +717,14 @@ def Employ_Sallery(request):
             Date__year=
                 salary_record.Year
         ).count()
+
+        # 👉 YAHAN ADD KIYA HAI: Total attendance check karne ke liye
+        total_attendance = present + half_day + absent
+
+        # Agar attendance 0 hai, toh record ko database se delete karke skip kar do
+        if total_attendance == 0:
+            salary_record.delete()
+            continue
 
         monthly_salary = safe_salary(
             salary_record.MonthlySalary
